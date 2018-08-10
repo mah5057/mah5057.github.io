@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="Add description here">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>TEMPLATE FOR NEW FILES | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/syntax.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/nosearch.css">
+    <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/pygment_trac.css">
 
     <!-- Fonts -->
@@ -22,9 +22,11 @@
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Javascript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
     <!-- Eliminate 300ms delay between a tap and the firing of the click event
     on mobile browsers. -->
     <script src="/javascripts/fastclick.js"></script>
@@ -88,6 +90,33 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
   </head>
   <body>
+      
+<script id="search-results-template" type="text/mustache">
+    <ul class="search-results-ul">
+    {{#entries}}
+    <li class="search-li">
+      <u><a href="{{url}}">{{title}}</a></u>
+      <p>{{#excerpt}}{{{.}}}{{/excerpt}}</p>
+    </li>
+    {{/entries}}
+    </ul>
+</script>
+
+<script type="text/javascript">
+  $(function() {
+    $('#search-query').lunrSearch({
+      indexUrl  : '/js/index.json',           // url for the .json file containing search index data
+      results   : '#search-results',          // selector for containing search results element
+      template  : '#search-results-template', // selector for Mustache.js template
+      titleMsg  : null,   // message attached in front of results (can be empty)
+      emptyMsg  : '<p>No results.</p>',     // shown message if search returns no results
+      overlayDiv : '#active-search-overlay', // selector for div to grey out rest of page
+      searchForm : '#search-query', // selector for the input box
+      searchDiv : '#searchDiv'
+    });
+  });
+</script>
+    <div id="active-search-overlay" class="activeSearchOverlay" style="display: none;"></div>
     <div class="header">
       <div class="header--side-nav-toggle" js-side-nav-toggle>
         <div class="header--side-nav-toggle-line"></div>
@@ -106,6 +135,13 @@
       </div>
     </div>
     <div id="main" class="main">
+       <div class="search-form" id="searchDiv">
+         <span class="icon"><i class="fa fa-search"></i></span>
+           <form class="search-box" action="/search" method="get">
+             <input type="text" id="search-query" name="q" placeholder="Search" autocomplete="off">
+           </form>
+           <div id="search-results" class="searchResults" style="display: none;"></div>
+       </div>
       <div id="sidenav" class="side-nav">
         <ul>
           <li><a href="/">Quick-Start Guide</a></li>
@@ -148,74 +184,39 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+          <div id="contentdisplay" class="content-display">
+          
+<!-- Doc Portal Links -->
+
+<!-- mlab.com Links -->
+
+<!-- Non-mLab Links -->
+
+<h1 class="no_toc" id="template-for-new-files">TEMPLATE FOR NEW FILES</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#subtopicid_for_toc" id="markdown-toc-subtopicid_for_toc">Sub-Topic</a>    <ul>
+      <li><a href="#subsubtopicid_for_toc" id="markdown-toc-subsubtopicid_for_toc">Sub-sub-Topic</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 id="subtopicid_for_toc">Sub-Topic</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>Add text here</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<h3 id="subsubtopicid_for_toc">Sub-sub-Topic</h3>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<p>Add more information here</p>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<h4 class="no_toc" id="sub-sub-sub-topic">Sub-sub-sub-Topic</h4>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<p>And even more info here. Notice the `
+{:.no_toc}` in the header, that prevents the header from showing up in the TOC</p>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
-
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
-
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
-
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
-
-<h2 id="load-data">Step 4: Load some data</h2>
-
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
-
-<ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
-</ol>
-
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
-
-<h2 id="everything-else">Everything else you need to know</h2>
-
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
-
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
-
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
-
-</div>
+          </div>
+      </div>
       <div class="page-overlay" js-page-overlay>
         <div class="page-overlay--close"></div>
       </div>
@@ -244,5 +245,6 @@
       };
       anchors.add('h2, h3, h4, h5');
     </script>
+    <script src="/js/search.min.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>

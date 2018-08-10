@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="Guide to running MongoDB in production">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>Running MongoDB in Production | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,79 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="running-mongodb-in-production">Running MongoDB in Production</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#sandbox-suitability" id="markdown-toc-sandbox-suitability">Sandbox databases are unsuitable for “production use”</a></li>
+  <li><a href="#key-considerations" id="markdown-toc-key-considerations">Key considerations when running in production</a>    <ul>
+      <li><a href="#high-availability" id="markdown-toc-high-availability">High availability</a></li>
+      <li><a href="#emergency-support" id="markdown-toc-emergency-support">Emergency support</a></li>
+      <li><a href="#predictable-performance" id="markdown-toc-predictable-performance">Consistent and predictable performance</a></li>
+      <li><a href="#security" id="markdown-toc-security">Secure access and communication</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 id="sandbox-suitability">Sandbox databases are unsuitable for “production use”</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>In the spirit of ensuring your project is successful, both today and in the future, we want to make you aware of important considerations that make Sandbox databases unsuitable for “production use.”</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
-
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
-
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
-
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
-
-<h2 id="connect">Step 3: Connect to your new database</h2>
-
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
-
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
-
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
-
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
-
-<h2 id="load-data">Step 4: Load some data</h2>
-
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>What does “production use” mean? Different people and companies have different definitions. Many developers and business leaders have some of the following requirements when they move from prototyping/development to “production use.” Other companies may have additional requirements not listed here, but the following requirements are some of the most common:</p>
 
 <ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
+  <li>High availability of the database to minimize costly downtime</li>
+  <li>Access to 24x7 emergency support and/or a Service Level Agreement (SLA)</li>
+  <li>Consistent, predictable performance of the database and application</li>
+  <li>Additional security beyond standard database authentication</li>
 </ol>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p>If any of the items above correspond to your deployment’s requirements, an mLab <a href="https://mlab.com/plans">Shared Cluster or Dedicated Cluster plan</a> is more suitable than a Sandbox plan.</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
+<p>And it may be obvious, but if your application has paying customers, we would consider you to be running in production!</p>
 
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
+<h2 id="key-considerations">Key considerations when running in production</h2>
 
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
+<p>In this section, we provide additional detail around some of the key considerations when running in production.</p>
 
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<h3 id="high-availability">High availability</h3>
+
+<p><strong>High availability, or greater resiliency to downtime, can be achieved through moving to a multi-node “replica set” deployment.</strong></p>
+
+<p>For applications that require high availability, minimizing the chance of downtime is extremely important. With a Sandbox plan, your database runs on a single server process, or “node,” which is shared with other Sandbox database users.</p>
+
+<p>There are three typical reasons a node experiences downtime: scheduled or unplanned maintenance, user-initiated plan changes (e.g. as your data size grows, Sandbox plans are limited to 500 MB), and hardware failures.</p>
+
+<p>By adding a “redundant,” or secondary, node to your database deployment, you are protected from single-node deployment downtime scenarios. If your primary node becomes unavailable, your application can still access your database via your secondary node, thus minimizing your chance of experiencing downtime.</p>
+
+<p>mLab <a href="https://mlab.com/plans">Shared Cluster and Dedicated Cluster plans</a> offer such replica set deployments. In addition, by adding a redundant node, your deployment is eligible to use the <a href="http://0.0.0.0:4000/ops/#rolling-node-replacement">rolling node replacement process</a> which provides high availability during maintenance events like compactions, disk space and hardware upgrades/downgrades, migrations to new database versions, and more.</p>
+
+<h3 id="emergency-support">Emergency support</h3>
+
+<p><strong>A 24x7 emergency support contact, and/or an SLA, allows you to rest easily at night (and avoid calls from angry bosses or customers).</strong></p>
+
+<p>mLab provides excellent email-based customer support to all users, independent of your plan type. Our response times and resolution rates are viewed as best-in-class among cloud service providers.</p>
+
+<p>Our Dedicated plans also include a 24x7 emergency hotline which pages an on-call team member who will respond to your issue immediately. This service is valuable to customers who require immediate response in the case of unexpected, critical issues, which can happen at any time!</p>
+
+<h3 id="predictable-performance">Consistent and predictable performance</h3>
+
+<p><strong>Consistent, predictable performance can be achieved by dedicating underlying VM resources to your application and by leveraging best-in-class performance and monitoring tools.</strong></p>
+
+<p>For consistent, stable performance, your database should run on a dedicated VM. With a Sandbox plan, you run the risk of “noisy neighbors.” A Sandbox database’s underlying resources are shared with numerous multiple co-tenant databases, some of which may be servicing read- or write-intensive applications. With mLab Dedicated plans, your application is assigned a dedicated VM (which includes CPU and RAM), protecting your database from the activity of other users.</p>
+
+<p>mLab has developed a world-class set of <a href="http://0.0.0.0:4000/monitoring">database monitoring and performance enhancement tools</a> to help you optimize your database deployment (see screenshot of our Telemetry service below). These tools, including mLab’s <a href="http://0.0.0.0:4000/monitoring/#slow-query-analyzer">slow query analyzer and automated index recommendation service</a>, analyze VM and process-level metrics and statistics to provide the best and most actionable insights. (Note: performance data can also be forwarded to New Relic.)</p>
+
+<p><img src="/assets/screenshot-telemetry.png" alt="img-telemetry" /></p>
+
+<div class="note-box note-box">
+  <p>These performance and monitoring tools are not offered with our Sandbox plans, as they require a dedicated mongod process. To obtain your own mongod process and access the tools, you must migrate to a for-pay mLab plan.</p>
+</div>
+
+<h3 id="security">Secure access and communication</h3>
+
+<p><strong>Incremental levels of security can be achieved by adding an SSL certificate and/or custom firewall rules to your deployment.</strong></p>
+
+<p>Some users prefer to include enhanced security features beyond standard database authentication between the application layer and the database. If you would like to add SSL support, or set up custom firewall rules, you must move to a Dedicated plan. For more information regarding mLab security options, please review our <a href="http://0.0.0.0:4000/security">security documentation</a>.</p>
 
 </div>
       <div class="page-overlay" js-page-overlay>

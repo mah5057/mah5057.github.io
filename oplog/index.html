@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="Oplog tailing by accessing the local database">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>Accessing the MongoDB oplog | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,93 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="accessing-the-mongodb-oplog">Accessing the MongoDB oplog</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#accessing-the-oplog" id="markdown-toc-accessing-the-oplog">Accessing the oplog</a>    <ul>
+      <li><a href="#creating-a-database-user-to-access-the-oplog" id="markdown-toc-creating-a-database-user-to-access-the-oplog">Creating a database user to access the oplog</a></li>
+      <li><a href="#connecting-to-the-oplog" id="markdown-toc-connecting-to-the-oplog">Connecting to the oplog</a></li>
+    </ul>
+  </li>
+  <li><a href="#frequently-asked-questions" id="markdown-toc-frequently-asked-questions">Frequently Asked Questions</a>    <ul>
+      <li><a href="#q-does-the-local-database-holding-the-oplog-count-towards-my-quota-andor-bill" id="markdown-toc-q-does-the-local-database-holding-the-oplog-count-towards-my-quota-andor-bill">Q. Does the “local” database holding the oplog count towards my quota and/or bill?</a></li>
+      <li><a href="#q-how-do-i-create-a-database-user-that-can-read-both-the-oplog-and-my-database" id="markdown-toc-q-how-do-i-create-a-database-user-that-can-read-both-the-oplog-and-my-database">Q. How do I create a database user that can read both the oplog and my database?</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 id="overview">Overview</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>All for-pay plans with mLab have access to the “local” database which contains the <a href="https://docs.mongodb.com/v3.4/core/replica-set-oplog/">oplog</a> (operations log), a special capped collection that keeps a rolling record of all insert, update, and delete operations.</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<p>The oplog provides valuable information that can be used in a variety of ways. For example, <a href="https://www.meteor.com">Meteor-built</a> websites rely on the oplog to get real-time updates on data changes. Search and analytic engines such as Elasticsearch (via the <a href="https://github.com/mongodb-labs/mongo-connector/wiki">mongo-connector</a>) can also use the oplog to sync your data and help you gain insight from all of your application’s data-related activities. These are just two of the many applications and libraries out there that are designed to take advantage of an oplog’s contents.</p>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<p>Since the oplog is critical to replication and the health of a cluster, we recommend against querying the oplog on the primary node of a cluster.  Oplog queries are resource intensive because they are not able to utilize indexes and require full collection scans for each operation.  Regularly querying the oplog can severely impact performance and even cause downtime.</p>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<div class="note-box note-box">
+  <p>On Shared plans, we recommend tailing the oplog using <a href="https://docs.mongodb.com/v3.4/core/tailable-cursors/">tailable cursors</a> in order to sync data from the oplog.</p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+  <p>On Dedicated plans running MongoDB 3.6 and the WiredTiger storage engine, we recommend instead using the <a href="https://docs.mongodb.com/manual/changeStreams/">Change Streams</a> feature.  This means that if your Dedicated plan deployment is running a version below MongoDB 3.6, we recommend upgrading to version 3.6 to use Change Streams.</p>
+</div>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
+<h2 id="accessing-the-oplog">Accessing the oplog</h2>
+<p><em>Not available for Sandbox databases</em></p>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
+<h3 id="creating-a-database-user-to-access-the-oplog">Creating a database user to access the oplog</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
-
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
-
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
-
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
-
-<h2 id="load-data">Step 4: Load some data</h2>
-
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>For any application to read or tail the oplog, you will need to create a database user as per the following instructions:</p>
 
 <ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the deployment whose oplog you want to access.</li>
+  <li>Click the “admin” database under the “System Databases” section.
+<img src="/assets/screenshot-admindb.png" alt="img-admindb" class="narrow" /></li>
+  <li>Click the “Users” tab.</li>
+  <li>Click the “Add oplog user” button to create a new user.<br />
+<img src="/assets/screenshot-addoploguser.png" alt="img-addoploguser" class="skinny" /></li>
 </ol>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<h3 id="connecting-to-the-oplog">Connecting to the oplog</h3>
 
-<h2 id="everything-else">Everything else you need to know</h2>
+<p>To connect to the oplog, you’ll need to make sure that your connection string is pointing to the “local” database where the oplog resides but authing against the “admin” database because the oplog reader database user was created in that database.</p>
 
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
+<p>For example, your connection string may look like this:</p>
 
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mongodb://&lt;dbuser&gt;:&lt;dbpassword&gt;@ds012345-a0.mlab.com:56789,ds012345-a1.mlab.com:56790/local?replicaSet=rs-ds012345&amp;authSource=admin
+</code></pre></div></div>
 
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h5 id="q-does-the-local-database-holding-the-oplog-count-towards-my-quota-andor-bill">Q. Does the “local” database holding the oplog count towards my quota and/or bill?</h5>
+
+<p>Shared plan deployments are currently configured with a 2 GB oplog, and this oplog is included for free. In other words, the local database does not contribute to the quota or bill for Shared plan deployments.</p>
+
+<p>Dedicated plans are initially configured using <a href="https://docs.mongodb.com/v3.4/core/replica-set-oplog/#oplog-size">MongoDB’s default oplog size</a> but the size can then be customized. The oplog on Dedicated plan deployments does count toward the pre-configured amount of storage that comes with each plan. For example, if your Dedicated plan includes 60 GB of storage and the oplog has been configured to be 10 GB, there will only be 50 GB left for use.</p>
+
+<h5 id="q-how-do-i-create-a-database-user-that-can-read-both-the-oplog-and-my-database">Q. How do I create a database user that can read both the oplog and my database?</h5>
+
+<p>Some client libraries such as <code class="highlighter-rouge">mongo-connector</code> need access not only to the oplog, but also to the database itself. To support client libraries like this, mLab oplog database users are automatically granted the following access privileges:</p>
+
+<p><strong>Dedicated plan deployments</strong></p>
+
+<p>The oplog reader user is automatically granted this role:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.grantRolesToUser(OPLOG_READER_USER, ["readAnyDatabase"])
+</code></pre></div></div>
+
+<p><strong>Shared plan deployments</strong></p>
+
+<p>The oplog reader user is automatically granted this role:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.grantRolesToUser(OPLOG_READER_USER, [{"role": "read", "db": YOUR_DB}] )
+</code></pre></div></div>
+
+<p></p>
+
+<div class="warning-box warning-box">
+  <p>If created an oplog database user prior to April 2018, it might not have access to the database itself. In this situation, you will need to create a brand-new oplog database user in order to get this access.</p>
+</div>
 
 </div>
       <div class="page-overlay" js-page-overlay>

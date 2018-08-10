@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="What to expect during required maintenance events">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>mLab Maintenance Events | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,64 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="mlab-maintenance-events">mLab Maintenance Events</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#replacing-vm" id="markdown-toc-replacing-vm">Replacing the underlying machine</a>    <ul>
+      <li><a href="#replace-vm-sandbox" id="markdown-toc-replace-vm-sandbox">Sandbox plan</a></li>
+      <li><a href="#replace-vm-shared-single-node" id="markdown-toc-replace-vm-shared-single-node">Shared Single-node plan</a></li>
+      <li><a href="#replace-vm-shared-cluster" id="markdown-toc-replace-vm-shared-cluster">Shared Cluster plan</a></li>
+      <li><a href="#replace-vm-dedicated-single-node" id="markdown-toc-replace-vm-dedicated-single-node">Dedicated Single-node plan</a></li>
+      <li><a href="#replace-vm-dedicated-cluster" id="markdown-toc-replace-vm-dedicated-cluster">Dedicated Cluster plan</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 id="replacing-vm">Replacing the underlying machine</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<h3 id="replace-vm-sandbox">Sandbox plan</h3>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<p>You should expect a few minutes of downtime when we replace the underlying machine for a Sandbox database.  If the existing underlying machine is degraded, you could experience up to a couple of hours of downtime.</p>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<h3 id="replace-vm-shared-single-node">Shared Single-node plan</h3>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<p><em>This is a legacy plan. Contact support@mlab.com for help migrating to a Cluster plan to avoid downtime.</em></p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<p>You should expect about 30 minutes of downtime when we replace the underlying machine for a database on our legacy Shared Single-node plan.</p>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
+<h3 id="replace-vm-shared-cluster">Shared Cluster plan</h3>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
+<h4 class="no_toc" id="electable-node">Electable node</h4>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
+<p>You should expect no downtime if your application is properly configured with a <a href="/connecting/#replica-set-connections">replica set connection that can handle auto-failover</a>.  However, you will lose redundancy/high availability for approximately 60-90 minutes while we will take the node down and move it to a different virtual machine.</p>
 
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
+<p>If this node is currently Primary, and you’d like to avoid failover during this maintenance, you can pre-emptively initiate a failover now.</p>
 
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
+<h4 class="no_toc" id="arbiter-node">Arbiter node</h4>
 
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
+<p>You should expect no downtime. However, you will lose redundancy/high availability for a couple minutes while we take the node down and move it to a different virtual machines.</p>
 
-<h2 id="load-data">Step 4: Load some data</h2>
+<h3 id="replace-vm-dedicated-single-node">Dedicated Single-node plan</h3>
 
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p><em>Contact support@mlab.com for help migrating to a Cluster plan to avoid downtime.</em></p>
 
-<ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
+<p>You should expect about 10-20 minutes of downtime when we replace the underlying machine.</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
+<h3 id="replace-vm-dedicated-cluster">Dedicated Cluster plan</h3>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
-</ol>
+<h4 class="no_toc" id="electable-node-1">Electable node</h4>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p>You should expect no downtime if your application is properly configured with a <a href="/connecting/#replica-set-connections">replica set connection that can handle auto-failover</a>. If this node is Primary there will be a failover so that it becomes Secondary.</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
+<p>You will keep the same level of availability during the maintenance because we use our seamless rolling node replacement process for host replacements on Dedicated Cluster plan deployments.</p>
 
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
+<h4 class="no_toc" id="non-electable-node">Non-electable node</h4>
 
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
+<p>You should expect no downtime.  You will also keep the same level of availability during the maintenance because we use our seamless rolling node replacement process for host replacements on Dedicated Cluster plan deployments.</p>
 
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<h4 class="no_toc" id="arbiter-node-1">Arbiter node</h4>
+
+<p>You should expect no downtime. However, you will lose redundancy/high availability for a couple minutes while we take the node down and move it to a different virtual machines.</p>
 
 </div>
       <div class="page-overlay" js-page-overlay>

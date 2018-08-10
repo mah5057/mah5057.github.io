@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="Accessing and understanding the output of MongoDB's dbStats and collStats commands for your mLab database and collections running with MMAPv1">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>MongoDB Storage Statistics (MMAPv1) | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,97 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="mongodb-storage-statistics-mmapv1">MongoDB Storage Statistics (MMAPv1)</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#view-stats" id="markdown-toc-view-stats">Viewing the current statistics</a></li>
+  <li><a href="#size-stats" id="markdown-toc-size-stats">Understanding MongoDB storage and size metrics</a></li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 class="no_toc" id="overview">Overview</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>In MongoDB, the <a href="https://docs.mongodb.com/v3.4/reference/command/dbStats/"><code class="highlighter-rouge">dbStats</code></a> and <a href="https://docs.mongodb.com/v3.4/reference/command/collStats/"><code class="highlighter-rouge">collStats</code></a> commands return storage statistics for your database and collections.</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<p>Below, follow the instructions for viewing the output of these commands directly in the mLab management portal or running the commands in the mongo shell.</p>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<p>We also discuss <a href="#size-stats">how MongoDB storage works and what some of size-related metrics</a> actually mean.</p>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<h2 id="view-stats">Viewing the current statistics</h2>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
-
-<h2 id="connect">Step 3: Connect to your new database</h2>
-
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
-
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
-
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
-
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
-
-<h2 id="load-data">Step 4: Load some data</h2>
-
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>To view the output of these commands in the mLab management portal (which also displays helpful definitions for each field):</p>
 
 <ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the deployment with the database whose stats you want to view.
+    <ul>
+      <li>If necessary, navigate to the desired database after navigating to the deployment and if further desired, click the “Collections” tab to view stats for a specific collection.</li>
+    </ul>
   </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
+  <li>Once you’ve navigated to the desired database or collection, click the “Stats” tab. 
+<img src="/assets/screenshot-dbstats.png" alt="img-dbstats" /></li>
 </ol>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p>To run these commands in the mongo shell, use the respective helper methods, both shown below:</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>&gt; db.stats()
 
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
+&gt; db.&lt;collection&gt;.stats()
+</code></pre></div></div>
 
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
+<h2 id="size-stats">Understanding MongoDB storage and size metrics</h2>
 
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<p>MongoDB provides a variety of size-related metrics for your database and once you understand the basics of MongoDB storage, it’s easier to understand the differences between these metrics.</p>
+
+<h3 class="no_toc" id="the-basics-data-files-and-extents">The basics: data files and extents</h3>
+
+<p>Every MongoDB instance consists of a namespace file,  journal files and data files. Here, we’ll focus only on data files, since that is where all of the data and indexes for your database reside.</p>
+
+<p><strong>Data files</strong> store BSON documents, indexes, and MongoDB-generated metadata in structures called extents. Each data file is made up of multiple extents.</p>
+
+<p><strong>Extents</strong> are logical containers within data files used to store documents and indexes.</p>
+
+<p><img src="/assets/img-data_extents.png" alt="img-extents" /></p>
+
+<p>The above diagram illustrates the relationship between data files and extents. Note:</p>
+
+<ul>
+  <li>Data and indexes are each contained in their own sets of extents; no extent will ever contain content for more than one collection.</li>
+  <li>Data and indexes are never contained within the same extent.</li>
+  <li>The data and indexes for a collection will usually span multiple extents.</li>
+  <li>When a new extent is needed, MongoDB will attempt to use available space within current data files. If space cannot be found MongoDB will create new data files.</li>
+</ul>
+
+<h3 class="no_toc" id="the-metrics-datasize-storagesize-and-filesize">The metrics: dataSize, storageSize, and fileSize</h3>
+
+<p>Some of the more commonly examined metrics from the <code class="highlighter-rouge">dbStats</code> command are <code class="highlighter-rouge">dataSize</code>, <code class="highlighter-rouge">storageSize</code> and <code class="highlighter-rouge">fileSize</code>. What is the difference between how these metrics are calculated?</p>
+
+<h4 class="no_toc" id="data-size">Data size</h4>
+
+<p><img src="/assets/img-data_size.png" alt="img-datasize" /></p>
+
+<p>The <code class="highlighter-rouge">dataSize</code> metric is the sum of the the sizes (in bytes) of all the documents and padding stored in the database.</p>
+
+<p>While <code class="highlighter-rouge">dataSize</code> does decrease when you delete documents, it does not decrease when documents shrink because the space used by the original document has already been allocated (to that particular document) and cannot be used by other documents.</p>
+
+<p>Alternatively, if a user updates a document with more data, <code class="highlighter-rouge">dataSize</code> will remain the same as long as the new document fits within its originally padded pre-allocated space.</p>
+
+<h4 class="no_toc" id="storage-size">Storage size</h4>
+
+<p><img src="/assets/img-storage_size.png" alt="img-storagesize" /></p>
+
+<p>The <code class="highlighter-rouge">storageSize</code> metric is equal to the size (in bytes) of all the data extents in the database. This number is larger than <code class="highlighter-rouge">dataSize</code> because it includes yet-unused space (in data extents) and space vacated by deleted or moved documents within extents.</p>
+
+<p>The <code class="highlighter-rouge">storageSize</code> value does not decrease as you remove or shrink documents.</p>
+
+<h4 class="no_toc" id="file-size">File size</h4>
+
+<p><img src="/assets/img-file_size.png" alt="img-filesize" /></p>
+
+<p>The <code class="highlighter-rouge">fileSize</code> metric is equal to the size (in bytes) of all the data extents, index extents and yet-unused space (in data files) in the database. This metric represents the storage footprint of your database on disk. <code class="highlighter-rouge">fileSize</code> is larger than <code class="highlighter-rouge">storageSize</code> because it includes index extents and yet-unused space in data files.</p>
+
+<p><code class="highlighter-rouge">fileSize</code> does not decrease as you remove collections, documents or indexes. However, it will decrease if you drop a database or <a href="/ops/#compacting">compact your deployment</a> in order to de-fragment and release space back to the OS.</p>
+
+<p>For further reading, <a href="https://docs.mongodb.com/v3.4/faq/storage/#faq-disk-size">MongoDB Inc. provides a technical explanation in its FAQ</a>.</p>
 
 </div>
       <div class="page-overlay" js-page-overlay>

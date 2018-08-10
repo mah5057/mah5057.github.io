@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="Description" content="Improve performance of your mLab database by creating indexes. Examine slow queries with mLab's performance monitoring tools.">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Indexing and Performance | mLab Documentation & Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- favicon -->
+    <link href="https://mlab.com/base/img/favicon.ico?v=2" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/nosearch.css">
+    <link rel="stylesheet" href="/css/pygment_trac.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="/css/webfonts/MyFontsWebfontsKit.css" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+
+    <!-- Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Eliminate 300ms delay between a tap and the firing of the click event
+    on mobile browsers. -->
+    <script src="/javascripts/fastclick.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // Style the warning/note boxes
+        $(".critical-box").prepend('<div class="title"></div>');
+        $(".warning-box").prepend('<div class="title"></div>');
+        $(".note-box").prepend('<div class="title"></div>');
+        $(".announcement-box").prepend('<div class="title"></div>');
+
+        // Have all external links go to new tab
+        $("a[href^='http']").attr("target", "_blank");
+
+
+        // Give active left nav item the "active" class
+        var article = location.pathname;
+        article = article.substring(0, article.length - 1);
+        if (article.length > 0) {
+          $("#sidenav li a[href^='"+article+"']").parent().addClass("active");
+        } else {
+          $("#sidenav li a[href='/']").parent().addClass("active");
+        }
+
+        // Instantiate FastClick
+        FastClick.attach(document.body);
+
+        // Hack to improve buggy scroll container behavior on iOS Safari
+        // On doc.ready, set the scroll position to 1px
+        $("#sidenav").scrollTop(1);
+
+        // Make sure side nav never hit's the top or bottom by
+        // Making it offset from either by 1px
+        $("#sidenav").scroll(function () {
+          if ($(this).scrollTop() + $(this).innerHeight() == $(this)[0].scrollHeight) {
+            $(this).scrollTop($(this).scrollTop() - 1);
+
+          } else if ($(this).scrollTop() == 0) {
+            $(this).scrollTop(1);
+          }
+        });
+
+        $("[js-side-nav-toggle]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").on("touchmove", function (e) {
+          e.preventDefault();
+        });
+      });
+
+      function handleSidebarToggle () {
+        $("body").toggleClass("sidebar-open");
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header--side-nav-toggle" js-side-nav-toggle>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+      </div>
+      <a href="/" class="logo">
+        <img src="/css/img/mLab-logo-dark.svg" class="logo--image" />
+        <div class="logo--text">Docs + Support</div>
+      </a>
+      <div class="header--links">
+        <a href="https://mlab.com">mLab Home</a>
+        <a href="https://support.mlab.com">My Support Requests</a>
+        <a title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>" class="emailSupport">Email support@mlab.com</a>
+        <!--<a href="mailto:mLab Support<support@mlab.com>?body=Deployment Identifier (if applicable):%0D%0AmLab Account Name (if applicable):%0D%0A%0D%0A" class="emailSupport">Email support@mlab.com</a>-->
+      </div>
+    </div>
+    <div id="main" class="main">
+      <div id="sidenav" class="side-nav">
+        <ul>
+          <li><a href="/">Quick-Start Guide</a></li>
+          <li><a href="/accounts">mLab Account Setup</a></li>
+          <li><a href="/plans">Plans and Data Centers</a></li>
+          <li><a href="/private-environments">Private Environments</a></li>
+          <li><a href="/subscriptions">Database Subscriptions</a></li>
+          <li><a href="/connecting">Connecting</a></li>
+          <li><a href="/migrating">Migrating Data into mLab</a></li>
+          <li><a href="/languages">Language Center</a></li>
+          <li><a href="/monitoring">Monitoring and Alerts</a></li>
+          <li><a href="/indexing">Indexing and Performance</a></li>
+          <li><a href="/backups">Backup and Recovery</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/ops">Managing Your MongoDB Deployment</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href="/faq">Frequently Asked Questions (FAQ)</a></li>
+          
+          <li>
+            <a href="/unpublished/blankfile/">-------------------</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/markdown/">MARKDOWN SYNTAX</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/portal/">WRITING STYLE and TERMS</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/template/">TEMPLATE FOR NEW FILES</a>
+          </li>
+          
+        </ul>
+        <div class="side-nav--support-links">
+          <a class="side-nav--support-link" href="https://mlab.com">mLab Home</a>
+          <a class="side-nav--support-link" href="https://support.mlab.com">My Support Requests</a>
+          <a class="side-nav--support-link emailSupport" title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>">Email support@mlab.com</a>
+        </div>
+      </div>
+      <div id="content" class="content-section">
+<h1 class="no_toc" id="indexing-and-performance">Indexing and Performance</h1>
+
+<ul id="markdown-toc">
+  <li><a href="#index-fundamentals" id="markdown-toc-index-fundamentals">Indexing fundamentals and considerations</a>    <ul>
+      <li><a href="#limiting-documents" id="markdown-toc-limiting-documents">Limiting the number of documents to scan using indexes</a></li>
+      <li><a href="#sorting-efficiently" id="markdown-toc-sorting-efficiently">Sorting efficiently using indexes</a></li>
+      <li><a href="#performing-efficient-or-queries" id="markdown-toc-performing-efficient-or-queries">Performing efficient $or queries</a></li>
+      <li><a href="#comparing-log-lines" id="markdown-toc-comparing-log-lines">Comparing a log line for an unindexed query vs. an indexed one</a></li>
+      <li><a href="#further-reading" id="markdown-toc-further-reading">Further reading</a></li>
+    </ul>
+  </li>
+  <li><a href="#special-indexing-considerations" id="markdown-toc-special-indexing-considerations">Special indexing considerations</a></li>
+  <li><a href="#index-management" id="markdown-toc-index-management">Index management</a>    <ul>
+      <li><a href="#viewing-indexes" id="markdown-toc-viewing-indexes">Viewing existing indexes</a></li>
+      <li><a href="#creating-indexes" id="markdown-toc-creating-indexes">Creating a new index</a></li>
+      <li><a href="#killing-index-creation" id="markdown-toc-killing-index-creation">Killing a running index creation operation</a></li>
+      <li><a href="#identifying-and-removing-unnecessary-indexes" id="markdown-toc-identifying-and-removing-unnecessary-indexes">Identifying and removing unnecessary indexes</a></li>
+      <li><a href="#managing-indexes" id="markdown-toc-managing-indexes">Managing indexes across environments</a></li>
+    </ul>
+  </li>
+  <li><a href="#performance-analysis" id="markdown-toc-performance-analysis">Performance analysis</a>    <ul>
+      <li><a href="#key-performance-tools" id="markdown-toc-key-performance-tools">Key performance tools</a></li>
+      <li><a href="#performance-indicators" id="markdown-toc-performance-indicators">Indicators of poor performance / Assessing headroom</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="index-fundamentals">Indexing fundamentals and considerations</h2>
+
+<h3 id="importance-of-indexing" class="no_toc">The importance of proper indexing</h3>
+
+<p>Indexes in MongoDB are B-tree data structures that dramatically reduce the resource (i.e., RAM, CPU, and I/O) requirements of querying. Proper indexing is critical; even a single unindexed query is enough to cause significant performance degradation.</p>
+
+<p>When a query is not indexed, MongoDB performs a full collection scan, iterating through every single document in the collection to find results. In contrast, an indexed query performs and scales much better because it inspects far fewer documents.</p>
+
+<p>Without sufficient indexing, the hardware costs for a performant database increase significantly. Importantly, because un-indexed queries use more resources than needed, they also impact the performance of other operations–even if those operations are indexed.</p>
+
+<h3 id="limiting-documents">Limiting the number of documents to scan using indexes</h3>
+
+<h4 class="no_toc" id="single-field-indexes">Single-field indexes</h4>
+
+<p>A query like <code class="highlighter-rouge">{"name": "Adam"}</code> may seem straightforward, but if it’s not indexed, it could perform quite badly (the larger the collection, the worse the query will perform).</p>
+
+<p>Rather than examining all the documents in a collection, create a <a href="https://docs.mongodb.com/manual/core/index-single/">Single Field Index</a> on this “name” field:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.createIndex( {“name”: 1} )
+</code></pre></div></div>
+
+<p>Now, no matter how large the collection, only documents matching <code class="highlighter-rouge">{"name": "Adam"}</code> will enter into memory.</p>
+
+<h4 class="no_toc" id="compound-indexes">Compound indexes</h4>
+
+<p>When a query includes multiple filters, it is best to include all filters in a compound index. For example, <code class="highlighter-rouge">{"name": "Adam", "year": {"$gte": 2016}}</code> can use the following <a href="https://docs.mongodb.com/manual/core/index-compound">Compound Index</a>:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.createIndex( {“name”: 1, "year": 1} )
+</code></pre></div></div>
+
+<p>This is preferable to a <code class="highlighter-rouge">{"year": 1, "name": 1}</code> index because an equivalency check on “name” is more selective than a range check on “year”.</p>
+
+<h3 id="sorting-efficiently">Sorting efficiently using indexes</h3>
+
+<p>The <a href="https://docs.mongodb.com/manual/reference/method/cursor.sort/">sort() method</a> returns documents in the requested ascending (1) or descending (-1) sort order. For example, the results of <code class="highlighter-rouge">.sort( {"lastName":1} )</code> are in ascending, alphabetical order.</p>
+
+<p>For a query with sort that isn’t covered by an index, MongoDB sorts results at query time, using precious CPU time and delaying the response to the app.</p>
+
+<p>However, if that same query is covered by an index which includes, in proper order, all fields used to filter and sort the result set, MongoDB does not sort results at query time. Instead, results are already sorted in the index and can be returned immediately.</p>
+
+<h4 class="no_toc" id="determining-the-order-of-fields">Determining the order of fields</h4>
+
+<p>A good rule of thumb for queries with sort is to order the indexed fields in this order:</p>
+
+<ul>
+  <li>First, the field(s) on which you will query for exact values</li>
+  <li>Second, one small <code class="highlighter-rouge">$in</code> array</li>
+  <li>Third, the field(s) on which you will sort in the same order and specification as the sort itself (<a href="https://docs.mongodb.com/manual/tutorial/sort-results-with-indexes/#sort-on-multiple-fields">sorting on multiple fields</a>)</li>
+  <li>Finally, the field(s) on which you will query for a range of values in the order of most selective to least selective (see range operators below)</li>
+</ul>
+
+<p>The reason one <code class="highlighter-rouge">$in</code> filter can precede sort fields is because MongoDB can break the query up according to that <code class="highlighter-rouge">$in</code> and merge sort the results.</p>
+
+<p>An example of using this rule of thumb is in the section on “Sorting the results of a complex query on a range of values” below, including a link to further reading. Note that these ordering recommendations are good for most use-cases but may not be the best for your data. The best index in a given scenario is determined through testing <a href="https://docs.mongodb.com/manual/reference/method/cursor.explain/">using .explain</a>.</p>
+
+<h5 class="no_toc" id="range-operators">Range operators</h5>
+
+<p>Query fields(s) which use the following operators should generally be included after the field(s) on which you will sort:</p>
+
+<ul>
+  <li><code class="highlighter-rouge">$in</code>, <code class="highlighter-rouge">$nin</code></li>
+  <li><code class="highlighter-rouge">$gt</code>, <code class="highlighter-rouge">$gte</code>, <code class="highlighter-rouge">$lt</code>, <code class="highlighter-rouge">$lte</code></li>
+  <li><code class="highlighter-rouge">$ne</code></li>
+  <li><code class="highlighter-rouge">$regex</code></li>
+  <li><code class="highlighter-rouge">$exists:true</code> (note that <code class="highlighter-rouge">$exists:false</code> is not considered a range operator for sorting purposes)</li>
+</ul>
+
+<h4 class="no_toc" id="determining-sort-orders">Determining sort orders</h4>
+
+<p>MongoDB can traverse an index in either direction. The <code class="highlighter-rouge">{"lastName":1}</code> index therefore satisfies both <code class="highlighter-rouge">.sort( {"lastName":1} )</code> and <code class="highlighter-rouge">.sort( {"lastName":-1} )</code>. Therefore, for single-field indexes, the sort order of keys does not matter.</p>
+
+<p>However, for compound indexes, sort order can matter in determining whether the index can support a sort operation; the combination of index field order and each field’s sort order determines whether the index can support a sort operation.</p>
+
+<p>If you are using sort() with compound indexes, more information can be found in the <a href="https://docs.mongodb.com/manual/core/index-compound/#sort-order">“Sort Order” section of MongoDB’s documentation on Compound Indexes</a>.</p>
+
+<h4 class="no_toc" id="sorting-the-results-of-a-simple-query-on-an-exact-value">Sorting the results of a simple query on an exact value</h4>
+
+<p><strong>Example of an exact value query with sort</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"firstName": 1} ).sort( {"lastName": 1} )
+</code></pre></div></div>
+
+<p><strong>Recommended index for this query</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"firstName": 1, "lastName": 1}
+</code></pre></div></div>
+
+<p>As described in <a href="https://docs.mongodb.com/manual/tutorial/sort-results-with-indexes/">MongoDB’s documentation on using indexes to sort query results</a>, an index with the sort direction reversed on all fields would work as well:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"firstName": -1, "lastName": -1}
+</code></pre></div></div>
+
+<h4 class="no_toc" id="sorting-the-results-of-a-complex-query-on-a-range-of-values">Sorting the results of a complex query on a range of values</h4>
+
+<p>Sorting a query result with an index is not always straightforward. Consider the following query on a collection that contains baby name statistics per year by gender.</p>
+
+<div class="note-box note-box">
+
+  <p>We created this example using a publicly available dataset of baby names from US Social Security Card Applications. Here’s an sample document:</p>
+
+  <figure class="highlight"><pre><code class="language-text" data-lang="text">{
+	"_id" : ObjectId("577462ff0d1d34fcb64ba7d4"),
+	"year" : 1880,
+	"name" : "John",
+	"sex" : "F",
+	"count" : 46
+}</code></pre></figure>
+
+  <p>This data is available at Data.gov under <a href="http://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data">Baby Names from Social Security Card Applications-National Level Data</a> if you would like to test these behaviors on your own. If you’d like to view database server log lines, use the “Logs” tab to access them (for-pay plans only).</p>
+
+</div>
+
+<p><strong>Example of a range query with sort</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> db.names.find( {"sex": "M", "count": {"$gt": 10000}} ).sort( {"year": 1} )
+</code></pre></div></div>
+
+<p><strong>Non-optimal index for this query</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {"sex": 1, "count": 1, "year": 1} 
+</code></pre></div></div>
+
+<p><strong>Resulting log message when using non-optimal index</strong></p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">2016-08-05T11:37:10.140-0700 I QUERY    [conn39] query data.names query: { query: { sex: "M", count: { $gt: 10000 } }, orderby: { year: 1 } } planSummary: IXSCAN { sex: 1.0, count: 1.0, year: 1.0 } ntoreturn:10000 ntoskip:0 nscanned:6480 nscannedObjects:6480 scanAndOrder:1 keyUpdates:0 writeConflicts:0 numYields:101 nreturned:3240 reslen:229840 locks:{ Global: { acquireCount: { r: 204} }, MMAPV1Journal: { acquireCount: { r: 102 } }, Database: { acquireCount: { r: 102 } }, Collection: { acquireCount: { R: 102 } } } 38ms</code></pre></figure>
+
+<p>Even though the query is using an index that includes the sort field, the <code class="highlighter-rouge">scanAndOrder: 1</code> is evidence that an in-memory sort took place. This is because of the range criteria on count and the structure of the index. To avoid scanAndOrder in these situations, place sort fields before range fields in the index.</p>
+
+<p><strong>Recommended index for this query</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {"sex": 1, "year": 1, "count": 1} 
+</code></pre></div></div>
+
+<p><strong>Resulting log message when using recommended index</strong></p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">2016-08-05T11:38:21.780-0700 I QUERY    [conn39] query data.names query: { query: { sex: "M", count: { $gt: 10000 } }, orderby: { year: 1 } } planSummary: IXSCAN { sex: 1.0, year: 1.0, count: 1.0 } ntoreturn:10000 ntoskip:0 nscanned:3376 nscannedObjects:3240 keyUpdates:0 writeConflicts:0 numYields:29 nreturned:3240 reslen:229840 locks:{ Global: { acquireCount: { r: 60 } }, MMAPV1Journal: { acquireCount: { r: 30 } }, Database: { acquireCount: { r: 30 } }, Collection: { acquireCount: { R: 30 } } } 9ms</code></pre></figure>
+
+<p>The omission of <code class="highlighter-rouge">“scanAndOrder:1”</code> confirms that the query is completed without an in-memory sort.</p>
+
+<p>To better understand the log lines above, read the next section below. Further reading on this topic of sorting the results of complex queries is available at our blog post on <a href="http://blog.mlab.com/2012/06/cardinal-ins/">sorting the results of queries on ranges</a>.</p>
+
+<h3 id="performing-efficient-or-queries">Performing efficient $or queries</h3>
+
+<p>In general, index for <a href="https://docs.mongodb.com/manual/reference/operator/query/or/">$or</a> queries as though each <code class="highlighter-rouge">$or</code> clause was its own query. Be sure to consider the sort clause as part of each <code class="highlighter-rouge">$or</code> clause.</p>
+
+<p><strong>Example $or query</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.names.find( {"$or": [ {"firstName": "Linda"}, {"middleName": "Linda"} ]} ).sort( {"count": -1} )
+</code></pre></div></div>
+
+<p><strong>Recommended indexes for this query</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"firstName": 1, "count": 1}
+{"middleName": 1, "count": 1}
+</code></pre></div></div>
+
+<h4 class="no_toc" id="server-13732">SERVER-13732</h4>
+
+<p>Certain <code class="highlighter-rouge">$or</code> queries are affected by a known bug, <a href="https://jira.mongodb.org/browse/SERVER-13732">SERVER-13732</a>, which prevents efficient index selection. To avoid this bug when composing <code class="highlighter-rouge">$or</code> queries, either <a href="/ops/#change-version">upgrade to MongoDB 3.6</a> or ensure that <code class="highlighter-rouge">$or</code> is the only top-level field in the query. For example:</p>
+
+<p><strong>Example of an $or query affected by SERVER-13732</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.names.find( {"year": 1972, "$or": [ {"name": "Eric", "sex": "M"}, {"name": "Erica", "sex": "F"} ]} ).sort( {"count": -1} )
+</code></pre></div></div>
+
+<p><strong>Example of an $or query not affected by SERVER-13732</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.names.find( {"$or": [ {"year": 1972, "name": "Eric", "sex": "M"}, {"year": 1972, "name": "Erica", "sex": "F"} ]} ).sort( {"count": -1} )
+</code></pre></div></div>
+
+<p><strong>Recommended index for this query</strong></p>
+
+<p>Since both of these <code class="highlighter-rouge">$or</code> clauses use the same query filters, each clause can use the same index:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"year": 1, "name": 1, "sex": 1, "count": -1}
+</code></pre></div></div>
+
+<h3 id="comparing-log-lines">Comparing a log line for an unindexed query vs. an indexed one</h3>
+
+<p>This example uses the same baby name statistics data as above and compares two log lines for the same query.</p>
+
+<p>The first operation takes almost 2 seconds because it does not use an index, but the second takes 1 millisecond with an index. The key
+differences between these log messages lie in the <code class="highlighter-rouge">planSummary</code>,<code class="highlighter-rouge">nscannedObjects</code>, and <code class="highlighter-rouge">scanAndOrder</code> values.</p>
+
+<div class="note-box note-box">
+
+  <p>Starting in MongoDB 3.2, the following key words in MongoDB log lines changed:</p>
+
+  <ul>
+    <li><code class="highlighter-rouge">scanAndOrder</code> —&gt; <code class="highlighter-rouge">hasSortStage</code></li>
+    <li><code class="highlighter-rouge">nscanned</code> —&gt; <code class="highlighter-rouge">keysExamined</code></li>
+    <li><code class="highlighter-rouge">nscannedObjects</code> —&gt; <code class="highlighter-rouge">docsExamined</code></li>
+  </ul>
+
+</div>
+
+<p><strong>Example query with sort</strong></p>
+
+<p>We want to find the number of babies named “Arya” each year in ascending year order. Our database query is:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.names.find( {"name": "Arya"} ).sort( {"year": 1} )
+</code></pre></div></div>
+
+<p><strong>Resulting log message when unindexed</strong></p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">2016-06-30T12:21:05.153-0700 I QUERY    [conn120] query data.names query: { query: { name: "Arya" }, orderby: { year: 1.0 } } planSummary: COLLSCAN ntoreturn:0 ntoskip:0 nscanned:0 nscannedObjects:1858689 scanAndOrder:1 keyUpdates:0 writeConflicts:0 numYields:14562 nreturned:58 reslen:4022 locks:{ Global: { acquireCount: { r: 29126 } }, MMAPV1Journal: { acquireCount: { r: 14563 } }, Database: { acquireCount: { r: 14563 } }, Collection: { acquireCount: { R: 14563 } } } 1795ms</code></pre></figure>
+
+<p>The following information observed in the log line above shows a lot of room for improvement:</p>
+
+<ul>
+  <li>
+    <p><strong>planSummary</strong>: The <code class="highlighter-rouge">planSummary: COLLSCAN</code> shows the database did not use an index and instead performed a full collection scan.</p>
+  </li>
+  <li>
+    <p><strong>nscannedObjects</strong>: The <code class="highlighter-rouge">nscannedObjects:1858689</code> shows the number of documents inspected. By comparing this to the number of returned documents (<code class="highlighter-rouge">nreturned:58</code>), we see how inefficient the query is. To return 58 documents, the database brought almost two million documents into memory. Note that in MongoDB 3.2+ this would look like <code class="highlighter-rouge">docsExamined:1858689</code>.</p>
+  </li>
+  <li>
+    <p><strong>scanAndOrder</strong>: The <code class="highlighter-rouge">scanAndOrder:1</code> shows that the results were sorted in memory after the data was retrieved. Note that in MongoDB 3.2+ this would look like <code class="highlighter-rouge">hasSortStage:1</code>.</p>
+  </li>
+</ul>
+
+<p><strong>Recommended index</strong></p>
+
+<p>We can improve performance by:</p>
+
+<ul>
+  <li>Reducing the number of documents being inspected in memory</li>
+  <li>Removing the need to perform in-memory sorts</li>
+</ul>
+
+<p>We now build the following index:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> {"name": 1, "year": 1}
+</code></pre></div></div>
+
+<p><strong>Resulting log message when using recommended index</strong></p>
+
+<p>Once the index is created, the query runs orders of magnitude faster:</p>
+
+<figure class="highlight"><pre><code class="language-text" data-lang="text">2016-06-30T12:21:24.883-0700 I QUERY    [conn120] query data.names query: { query: { name: "Arya" }, orderby: { year: 1.0 } } planSummary: IXSCAN { name: 1.0, year: 1.0 } ntoreturn:0 ntoskip:0 nscanned:58 nscannedObjects:58 keyUpdates:0 writeConflicts:0 numYields:0 nreturned:58 reslen:4022 locks:{ Global: { acquireCount: { r: 2 } }, MMAPV1Journal: { acquireCount: { r: 1 } }, Database: { acquireCount: { r: 1 } }, Collection: { acquireCount: { R: 1 } } } 1ms</code></pre></figure>
+
+<p>The following information observed in the log line above shows an efficient query:</p>
+
+<ul>
+  <li>
+    <p><strong>planSummary</strong>: The <code class="highlighter-rouge">planSummary: IXSCAN { name: 1.0, year: 1.0 }</code> indicates what index was used for the query.</p>
+  </li>
+  <li>
+    <p><strong>nscannedObjects</strong>: The <code class="highlighter-rouge">nscannedObjects:58</code> shows that only 58 documents were inspected. Because this number matches the number of documents in the result set (nreturned:58), the query is very efficient. Note that in MongoDB 3.2+ this would look like <code class="highlighter-rouge">docsExamined:58</code>.</p>
+  </li>
+  <li>
+    <p><strong>scanAndOrder</strong>: The omission of <code class="highlighter-rouge">scanAndOrder:1</code> means results were not sorted in memory; the index allowed documents to be read in the requested order. Note that the omission of <code class="highlighter-rouge">hasSortStage:1</code> in MongoDB 3.2+ means the same thing.</p>
+  </li>
+</ul>
+
+<p>Results were not sorted in memory, and the number of documents inspected is equal to the number of documents returned. This is an efficient query.</p>
+
+<h3 id="further-reading">Further reading</h3>
+
+<p>One of MongoDB’s strengths is its flexible data model. Flexible data modeling is powerful, but dangerous without proper indexing. If your data contains complex fields such as arrays, embedded documents, or geospatial data, read the following for important information about index behavior:</p>
+
+<ul>
+  <li><a href="https://docs.mongodb.com/manual/core/index-multikey/">Indexing arrays using Multikey Indexes</a></li>
+  <li><a href="https://docs.mongodb.com/manual/core/index-single/#create-an-index-on-embedded-document">Indexing embedded documents</a></li>
+  <li><a href="https://docs.mongodb.com/manual/applications/geospatial-indexes/">Geospatial indexes</a></li>
+</ul>
+
+<h2 id="special-indexing-considerations">Special indexing considerations</h2>
+
+<h3 id="avoiding-operators-and-modifiers-that-cannot-use-indexes" class="no_toc">Avoid operators/modifiers that can never use indexes</h3>
+
+<p>We recommend against using the below operators and modifiers that cannot use indexes.</p>
+
+<h4 class="no_toc" id="where-operator">$where operator</h4>
+
+<p><a href="https://docs.mongodb.com/manual/reference/operator/query/where/">$where</a> does not use indexes and instead uses the server-side JavaScript engine to examine documents in memory. Importantly, the <code class="highlighter-rouge">$where</code> operator is usually only necessary to evaluate field values against each other. When applying conditions on field values independently, use the MongoDB query language instead.</p>
+
+<p>The following two examples illustrate how the <code class="highlighter-rouge">$where</code> operator can be re-written as a query.</p>
+
+<p><strong>Example 1</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"$where": "this.count &gt;= 5"} )
+
+db.collection.find( {"count": {"$gte": 5}} )
+</code></pre></div></div>
+
+<p><strong>Example 2</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"$where": "this.make=='BMW' &amp;&amp; this.model=='M3'"} )
+
+db.collection.find( {"make": "BMW", "model": "M3"} )
+</code></pre></div></div>
+
+<p>Sometimes it’s not possible to replace a <code class="highlighter-rouge">$where</code> with a query but it is possible using MongoDB’s <a href="https://docs.mongodb.com/manual/core/aggregation-pipeline/">aggregation framework</a>. For example, <code class="highlighter-rouge">db.collection.find( {"$where": "this.count &gt;= this.maxCount"} )</code> cannot be rewritten using a MongoDB query but it can be evaluated using MongoDB’s aggregation framework.</p>
+
+<p>If you absolutely must use <code class="highlighter-rouge">$where</code>, limit the number of documents evaluated to a very small number using standard query operators with supporting indexes.</p>
+
+<h4 class="no_toc" id="size-operator">$size operator</h4>
+
+<p><a href="https://docs.mongodb.com/manual/reference/operator/query/size/">$size</a> does not use indexes and instead must examine documents in memory to count the number of elements in embedded arrays. If you must use <code class="highlighter-rouge">$size</code>, limit the number of documents evaluated to a very small number using standard query operators with supporting indexes.</p>
+
+<h4 class="no_toc" id="nor-operator">$nor operator</h4>
+
+<p><a href="https://docs.mongodb.com/manual/reference/operator/query/nor/">$nor</a> will always perform a collection scan (i.e., examine every document in a collection), so the performance impact is based on the size of the collection. If at all possible, try and avoid the <code class="highlighter-rouge">$nor</code> operator so your query patterns can properly use indexes. Below are two examples of how the <code class="highlighter-rouge">$nor</code> operator can be re-written.</p>
+
+<p>The <code class="highlighter-rouge">$nor</code> operator can sometimes be re-written using the <a href="https://docs.mongodb.com/manual/reference/operator/query/ne/">$ne</a> operator:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"$nor": [ {"a": 1}, {"b": 1} ]} )
+ 
+db.collection.find( {"a": {"$ne": 1}, "b": {"$ne": 1}} )
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">$nor</code> operator can also sometimes be re-written using the <a href="https://docs.mongodb.com/manual/reference/operator/query/not/">$not</a> operator:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"$nor": [ {"a": {"$gt": 1}}, {"b": {"$gt": 1}} ]} )
+ 
+db.collection.find( {"$and": [ {"a": {"$not": {"$gt": 1}}}, {"b": {"$not": {"$gt": 1}}} ]} )
+</code></pre></div></div>
+
+<p>When refactoring queries, be sure to test that query results are as expected and logically correct for your application.</p>
+
+<h4 class="no_toc" id="natural-modifier">$natural modifier</h4>
+
+<p>Sorting by <a href="https://docs.mongodb.com/manual/reference/operator/meta/natural/">$natural</a> does not use indexes and instead forces a collection scan, even if a query filter is provided.</p>
+
+<p>If you must use <code class="highlighter-rouge">$natural</code>, also use a small <a href="https://docs.mongodb.com/manual/reference/method/cursor.limit/">limit</a> value to keep the number of documents scanned to a minimum. Alternatively, size your cluster to ensure that the queried collection can be part of the working set without disrupting database performance.</p>
+
+<h3 id="count-operations" class="no_toc">Count operations can use more memory than expected</h3>
+
+<p>A <a href="https://docs.mongodb.com/manual/reference/method/db.collection.count/">count operation</a> can use an index for selective conditions just like a query can, but note that it will need to scan documents if the query filter is not fully selective, or if it does not target a single continuous range of index keys (e.g., it has an <code class="highlighter-rouge">$in</code> clause).</p>
+
+<p>Consider a collection with the following index:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"students": 1, "grade": 1}
+</code></pre></div></div>
+
+<p>The first three count operation examples that follow will need to examine documents in addition to using the index:</p>
+
+<p>Example 1:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"students": 4, "grade": {"$in": [ 1, 2, 6 ]}} ).count()
+</code></pre></div></div>
+
+<p>This count operation does not target a single continuous range of index keys with the <code class="highlighter-rouge">$in</code> clause.</p>
+
+<p>Example 2:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"students": {"$gt": 4}, "grade": 4} ).count()
+</code></pre></div></div>
+
+<p>This count operation will need to examine documents in addition to using the index. Keys for <code class="highlighter-rouge">grade: 4</code> are not contiguous; they are separated by different <code class="highlighter-rouge">students</code> values because <code class="highlighter-rouge">students</code> occurs in the index before grade.</p>
+
+<p>Example 3:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"students": 4, "grade": 4, "age": 10} ).count()
+</code></pre></div></div>
+
+<p>The <code class="highlighter-rouge">{ "students": 1, "grade": 1 }</code> index does not include the age field, so it is not fully selective for this query.</p>
+
+<p>Example 4:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"students": 4, "grade": {"$gt": 4}} ).count()
+</code></pre></div></div>
+
+<p>In contrast to the first three examples above, this count operation is optimal in that it will use only the index.</p>
+
+<p>For more information, we recommend <a href="https://docs.mongodb.com/manual/reference/method/db.collection.count/#index-use">MongoDB’s documentation on counts and index use</a>.</p>
+
+<h3 id="avoiding-sorts-with-near-operator" class="no_toc">Avoid using a sort with geospatial $near queries</h3>
+
+<p>Geospatial <a href="https://docs.mongodb.com/manual/reference/operator/query/near/">$near</a>, <a href="https://docs.mongodb.com/manual/reference/operator/query/nearSphere/">$nearSphere</a>, and <a href="https://docs.mongodb.com/manual/reference/command/geoNear/">$geoNear</a> operators automatically return results in order (sorted by distance from the point specified). Providing an additional sort with the <code class="highlighter-rouge">$near</code> or <code class="highlighter-rouge">$nearSphere</code> operator will perform more work than necessary.</p>
+
+<p>If your use case requires finding points within an area that are either not sorted or sorted by criteria other than distance from a central point, use the <a href="https://docs.mongodb.com/manual/reference/operator/query/geoWithin/">$geoWithin</a> operator instead.</p>
+
+<h3 id="maxDistance-operator" class="no_toc">Use the $maxDistance operator with geospatial queries</h3>
+
+<p>Geospatial <a href="https://docs.mongodb.com/manual/reference/operator/query/near/">$near</a>, <a href="https://docs.mongodb.com/manual/reference/operator/query/nearSphere/">$nearSphere</a>, and <a href="https://docs.mongodb.com/manual/reference/command/geoNear/">$geoNear</a> queries should take advantage of the optional <a href="https://docs.mongodb.com/manual/reference/operator/query/maxDistance/">$maxDistance</a> operator wherever possible. By limiting the distance considered, you can avoid excess use of CPU and memory.</p>
+
+<p>Provide a <code class="highlighter-rouge">$maxDistance</code> value that is appropriate for your use case, both in terms of the distance to cover and the number of results that should be considered.</p>
+
+<h3 id="embedded-documents-as-ids" class="no_toc">Using embedded documents as _id values</h3>
+
+<p>Embedded document _ids allow you to encode complex values that aren’t
+included in the default <a href="https://docs.mongodb.com/manual/reference/method/ObjectId/">ObjectId</a>-based _ids generated by MongoDB and MongoDB drivers. However, we recommend using an ObjectId whenever possible.</p>
+
+<p>If you must use embedded documents as _ids, there are important considerations to be aware of:</p>
+
+<ul>
+  <li>The dynamic embedded document data type is less efficient than the default ObjectId data type.</li>
+  <li><a href="https://docs.mongodb.com/v3.2/tutorial/query-documents/#exact-match-on-the-embedded-document">Querying on embedded documents require an exact match</a> so order will matter when querying on an embedded document.</li>
+  <li>Dot notation must be used to <a href="https://docs.mongodb.com/v3.2/tutorial/query-documents/#equality-match-on-fields-within-an-embedded-document">match by specific fields in an embedded document</a> and indexes other than the _id index are required to query efficiently in this way.</li>
+</ul>
+
+<div class="note-box note-box">
+
+  <p>mLab’s management portal does not support embedded document _ids when viewing single documents.</p>
+
+</div>
+
+<h3 id="regex-performance" class="no_toc">Regexes scan large numbers of index entries</h3>
+
+<p>The degree to which regex operations benefit from indexes varies based on how the regex is composed.</p>
+
+<p>The following example uses a case-insensitive regex, which scans a large number of index entries:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"username": {"$regex": "John", "$options": "i"}} )
+</code></pre></div></div>
+
+<p>We can improve the performance of the above regex operation in three different ways.</p>
+
+<p><strong>1) Case-sensitive prefix expression</strong></p>
+
+<p>To keep the number of index entries scanned to a minimum, you can make use of a <a href="https://docs.mongodb.com/manual/reference/operator/query/regex/#index-use">case-sensitive, prefix expression</a>. We make the regex case-sensitive by dropping the case insensitive modifier <code class="highlighter-rouge">i</code> at the end of the regex, and make the operation a prefix expression by adding a caret <code class="highlighter-rouge">^</code> to the beginning of the regex.</p>
+
+<p>Thus, the following case-sensitive, <em>prefix expression</em> scans a limited number of index entries:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"username": {"$regex": "^John"}} )
+</code></pre></div></div>
+
+<p><strong>2) Storing a lowercase version of a field</strong></p>
+
+<p>In some cases, regexes can be avoided by adding a lowercase version of the field to each document and performing an equivalency check on that field. For example:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "username" : "John.Smith@email.com",
+    "lowerUsername" : "john.smith@email.com"
+}
+</code></pre></div></div>
+
+<p>The addition of a lowercase field removes the need for a case-insensitive regex for the following query:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"lowerUsername" : "john.smith@email.com"} ) 
+</code></pre></div></div>
+
+<p><strong>3) Avoid regexes entirely by creating a case insensitive index</strong></p>
+
+<p>New in MongoDB 3.4 are <a href="https://docs.mongodb.com/manual/core/index-case-insensitive/">case insensitive indexes</a>, which use <a href="https://docs.mongodb.com/manual/reference/collation/#collation-document-fields">collation</a> to set language-specific rules regarding string comparison and letter case:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.createIndex( {"username": 1}, {"collation": {"locale": "en", "strength": 2}} )
+</code></pre></div></div>
+
+<p>To use the case insensitive index, queries must specify the same collation options used during index creation:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.find( {"username": "John.Smith@email.com"} ).collation( {"locale": "en", "strength": 2} )
+</code></pre></div></div>
+
+<p>This query returns “John.Smith@email.com”, “john.smith@email.com”, “JohN.SmitH@EmaiL.CoM” and all other letter cases.</p>
+
+<h3 id="paginating-efficiently" class="no_toc">How to paginate efficiently</h3>
+
+<p>The <a href="https://docs.mongodb.com/manual/reference/method/cursor.skip/">skip()</a> and <a href="https://docs.mongodb.com/manual/reference/method/cursor.limit/">limit()</a> methods are often used together to support pagination. However, per this explanation of <a href="https://docs.mongodb.com/manual/reference/method/cursor.skip/#using-cursor-skip">skip behavior</a>, MongoDB must load all skipped documents into memory. As such, the memory and CPU cost of large skip operations is equivalent to querying for <strong>all</strong> skipped documents. See <a href="https://jira.mongodb.org/browse/SERVER-13946">https://jira.mongodb.org/browse/SERVER-13946</a> for more detail.</p>
+
+<p>Even if indexed, the following query scans 100 index keys before returning the “eleventh page” of results:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.books.find( {"genre": "fiction"} ).orderby( {"createdDate": 1} ).skip(100).limit(10)
+</code></pre></div></div>
+
+<p>Improve the performance of this operation by querying on a field that is appropriate for the list being rendered. This strategy is very useful when an app provides a “Next Page” option but does not allow users to skip to arbitrary pages.</p>
+
+<p>The query above can then be amended to use the <a href="https://docs.mongodb.com/manual/reference/operator/query/gt/">$gt operator</a> to find documents from any point within a collection without the use of skip().</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.books.find( {"genre": "fiction", "createdDate": {"$gt": ISODate("2017-07-31T21:38:28.968Z")}} ).limit(10).orderby( {"createdDate": 1} )
+</code></pre></div></div>
+
+<p>To retrieve the first page of results, use the orderby clause but omit the filter on “createdDate”. For each subsequent page, use the last value of the current page in a <code class="highlighter-rouge">$gt</code> (if ascending sort order) or <code class="highlighter-rouge">$lt</code> (if descending sort order) filter.</p>
+
+<h3 id="map-reduce" class="no_toc">Avoid map-reduce if possible</h3>
+
+<p>Map-reduce can artificially constrain resources by using the JavaScript engine in a way that can prevent other database operations from acquiring the locks they need. Often map-reduce jobs can be converted to <a href="https://docs.mongodb.com/manual/reference/aggregation/">aggregation framework operations</a>, which are less disruptive to database performance.</p>
+
+<p>If map-reduce jobs cannot be converted to well-indexed aggregation pipelines, try to execute map-reduce jobs at low frequency or consider <a href="https://blog.mlab.com/2016/10/configuring-a-mongodb-replica-set-for-analytics/">adding an analytics node</a> to the cluster for <a href="https://docs.mongodb.com/manual/reference/method/db.collection.mapReduce/#output-inline">map-reduce jobs that output inline</a>.</p>
+
+<p>Note that even indexed map-reduce and aggregation framework operations are more CPU and memory intensive than normal queries. For the best use of either of these MongoDB features, consider an mLab plan that includes multiple CPU cores.</p>
+
+<h2 id="index-management">Index management</h2>
+
+<h3 id="viewing-indexes">Viewing existing indexes</h3>
+
+<p>To view existing indexes for a particular collection, follow these steps:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the deployment with the database whose indexes you want to view.
+    <ul>
+      <li>If necessary, navigate to the desired database after navigating to the deployment.</li>
+    </ul>
+  </li>
+  <li>Navigate to a collection to view its indexes.</li>
+  <li>Click the “Indexes” tab to display all indexes created for the collection.
+<img src="/assets/screenshot-indexes.png" alt="img-indexes" /></li>
+</ol>
+
+<p>Alternately, you can use the <a href="https://docs.mongodb.com/v3.4/reference/method/db.collection.getIndexes/"><code class="highlighter-rouge">db.collection.getIndexes()</code></a> method via the mongo shell to view all indexes for a particular collection.</p>
+
+<h3 id="creating-indexes">Creating a new index</h3>
+
+<h4 class="no_toc" id="best-practices-when-creating-indexes">Best practices when creating indexes</h4>
+
+<p>The process of creating an index can require a lot of system resources and can be long-running (hours if not days).</p>
+
+<p>If uptime and performance are important for your application:</p>
+
+<ul>
+  <li>Build the index during a low traffic time.</li>
+  <li>Avoid simultaneous index builds (our management portal attempts to enforce this)</li>
+  <li>Build the index in the background (our management portal does this by default; see next section).</li>
+</ul>
+
+<p>To check on the progress of a long-running index build visit the “Tools” tab and click on the “Manage current operations” button.</p>
+
+<div class="warning-box warning-box">
+  <p>Index builds take significantly longer when there is insufficient RAM. In particular, if the index you’re building is close to or exceeds the RAM available, it could be impossible to build the index within a reasonable amount of time.</p>
+</div>
+
+<h4 class="no_toc" id="background-vs-foreground-index-builds">Background vs. foreground index builds</h4>
+
+<p>Always consider whether you want to build your indexes in the background or foreground. While building them in the foreground is faster, a foreground build blocks all other operations to the database. On a production system, you almost always want to build your indexes in the background to minimally impact your live database.</p>
+
+<p>If you <a href="#add-index-via-mlab-portal">build your index via the mLab management portal</a>, it will always be built in the background. If you <a href="https://docs.mongodb.com/v3.4/core/index-creation/">build your index via the mongo shell</a> or your driver, include the <code class="highlighter-rouge">{"background": true}</code> option to create the index in the background. If it is not specified, the index will be created in the foreground by default.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.collection.createIndex( {"fieldName": 1}, {"background": true} )
+</code></pre></div></div>
+
+<h4 id="add-index-via-mlab-portal" class="no_toc">Creating an index through the mLab management portal</h4>
+
+<p>Simple, compound, and geospatial indexes can all be created through the mLab management portal. To add an index for a specific collection:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the deployment with the database where an index will be added.
+    <ul>
+      <li>If necessary, navigate to the desired database after navigating to the deployment.</li>
+    </ul>
+  </li>
+  <li>Navigate to the collection where the index(es) will be added.</li>
+  <li>Click the “Indexes” tab.</li>
+  <li>Click the “Add” button to open the “Add new index” window. 
+<img src="/assets/screenshot-addindex.png" alt="img-addindex" /></li>
+  <li>Add your index in the editor window.</li>
+  <li>Adjust the options and custom name if desired. Note that custom names are not required; it is usually best to let MongoDB auto-generate a name.</li>
+  <li>Click “Create in background” to build your index.</li>
+</ol>
+
+<p>Alternately, you can use the <a href="https://docs.mongodb.com/v3.4/core/index-creation/"><code class="highlighter-rouge">db.collection.createIndex()</code></a> method via the mongo shell to add an index to your collection. If you would like for your deployment to remain available during the index building operation, specify (<code class="highlighter-rouge">{"background": true}</code>). Indexes created through mLab’s management portal are always built in the background.</p>
+
+<h3 id="killing-index-creation">Killing a running index creation operation</h3>
+
+<p>It’s possible you may find yourself in the position where you want to kill an in-progress index build for one or both of the following reasons:</p>
+
+<ul>
+  <li>Accidentally created the wrong one or one that you no longer want</li>
+  <li>Performance impact is too great</li>
+</ul>
+
+<p>In this case, you can kill the operation but be sure to proceed with caution. Killing a running index creation operation will often lead to replica sets with members having different sets of indexes as well as other unexpected issues.</p>
+
+<p>Therefore, unless database performance has degraded to an emergency state, we strongly encourage you to allow the index build to complete and then optionally remove it once it’s done building.</p>
+
+<div class="warning-box warning-box">
+  <p>Restarting the deployment to kill an index build won’t stop the index build and remove the index as you would expect. Instead, the process will start up again in an offline mode and build the index in the foreground as described in <a href="https://docs.mongodb.com/manual/core/index-creation/#interrupted-index-builds">MongoDB’s documentation on interrupted index builds</a>. This can lead to a loss of high availability or possibly downtime.</p>
+</div>
+
+<h3 id="identifying-and-removing-unnecessary-indexes">Identifying and removing unnecessary indexes</h3>
+
+<h4 class="no_toc" id="overview">Overview</h4>
+
+<p>While it is very important that all queries are indexed, updating indexes slows the speed of inserts and updates. As such, unnecessary indexes may cause unnecessary use of CPU and RAM.</p>
+
+<p>This section details how to <a href="#identifying-redundant-indexes">identify redundant indexes</a> and <a href="#identifying-unused-indexes">identify indexes that aren’t being used</a>.</p>
+
+<div class="warning-box warning-box">
+  <p>Be sure to review the checklist in the <a href="#removing-indexes">“Removing indexes”</a> section below before dropping any indexes!</p>
+</div>
+
+<h4 class="no_toc" id="identifying-redundant-indexes">Identifying redundant indexes</h4>
+
+<p>An index may be redundant if it is:</p>
+
+<ul>
+  <li>A <a href="https://docs.mongodb.com/v3.0/core/index-compound/#prefixes">prefix</a> of another compound index</li>
+  <li>Identical to another index with a similar <a href="https://docs.mongodb.com/manual/tutorial/sort-results-with-indexes/">sort order</a></li>
+</ul>
+
+<p>In summary, an index on <code class="highlighter-rouge">{"name": 1, "year": -1}</code> supports:</p>
+
+<ul>
+  <li>Queries on “name”</li>
+  <li>Sorts on <code class="highlighter-rouge">{"name": 1, "year": -1}</code> and <code class="highlighter-rouge">{"name": -1,"year": 1}</code></li>
+</ul>
+
+<p>However, that index does <strong>not</strong> support:</p>
+
+<ul>
+  <li>Queries on “year”</li>
+  <li>Sorts on <code class="highlighter-rouge">{"name": -1,"year": -1}</code> and <code class="highlighter-rouge">{"name": 1, "year": 1}</code></li>
+</ul>
+
+<h5 class="no_toc" id="redundant-simple-indexes">Redundant simple indexes</h5>
+
+<p><strong>Example simple index</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"year": 1}
+</code></pre></div></div>
+
+<p><strong>Example redundant index of the above index</strong></p>
+
+<p>The following index may be dropped if the above index exists:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"year": -1}
+</code></pre></div></div>
+
+<h5 class="no_toc" id="redundant-compound-indexes">Redundant compound indexes</h5>
+
+<p><strong>Example compound index</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"year": 1, "name": 1, "count": 1}
+</code></pre></div></div>
+
+<p><strong>Example redundant indexes of the above index</strong></p>
+
+<p>Depending on the sort clauses applied to queries, the following indexes may be redundant with the above index:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{"year": -1, "name": -1, "count": -1}
+{"year": 1, "name": 1}
+{"year": -1, "name": -1}
+{"year": 1}
+{"year": -1}
+</code></pre></div></div>
+
+<div class="warning-box warning-box">
+  <p>Be particularly careful if you are using unique, sparse, and/or partial indexes.</p>
+</div>
+
+<h4 class="no_toc" id="identifying-unused-indexes">Identifying unused indexes</h4>
+
+<p>Similar to redundant indexes, unused indexes impact write performance and consume valuable resources. Periodic index review and maintenance is recommended to ensure good database performance.</p>
+
+<p>On MongoDB versions prior to 3.2, manual inspection and consideration is necessary to infer unused indexes.</p>
+
+<p>For MongoDB version 3.2<sup id="fnref:foot-text"><a href="#fn:foot-text" class="footnote">1</a></sup>, we recommend using the <code class="highlighter-rouge">$indexStats</code> operator. Guidance on how to use this operator is available on our blog post: <a href="https://blog.mlab.com/2017/01/using-mongodb-indexstats-to-identify-and-remove-unused-indexes">Using MongoDB $indexStats to identify and remove unused indexes</a>.</p>
+
+<h4 id="removing-indexes" class="no_toc">Removing unnecessary indexes</h4>
+
+<h5 class="no_toc" id="proceed-with-caution">Proceed with caution</h5>
+
+<p>As with all delete operations on the database, always err on the side of caution when removing an index. For example:</p>
+
+<ul>
+  <li>Do not drop an index if there is any uncertainty surrounding its use.</li>
+  <li>Accidentally removing a necessary index can result in significant performance degradation.</li>
+  <li>Closely monitor database performance immediately after making index changes.</li>
+</ul>
+
+<p>In addition, here are some checks to perform before removing an unused index:</p>
+
+<ul>
+  <li>Are there infrequent operations which require the index that you’re not thinking of?</li>
+  <li>Are there query patterns that are failing to use the index even though you intend them to be?</li>
+  <li>Are there plans to use the index in the near future?</li>
+</ul>
+
+<p>If after reviewing these considerations you have questions about specific indexes, email <a href="mailto:support@mlab.com">support@mlab.com</a> for guidance.</p>
+
+<h5 class="no_toc" id="dropping-an-index-through-the-mlab-management-portal">Dropping an index through the mLab management portal</h5>
+
+<p>To drop an index for a specific collection:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the deployment with the database where an index will be removed.
+    <ul>
+      <li>If necessary, navigate to the desired database after navigating to the deployment.</li>
+    </ul>
+  </li>
+  <li>Navigate to the collection where the index(es) will be removed.</li>
+  <li>Click the “Indexes” tab.</li>
+  <li>Click the delete button (a trash can) that appears at the end of the row for the index that you want to delete.</li>
+</ol>
+
+<p>Alternately, you can use the <a href="https://docs.mongodb.com/v3.4/reference/method/db.collection.dropIndex/"><code class="highlighter-rouge">db.collection.dropIndex(&lt;index name&gt;)</code></a> method via the mongo shell to drop an index from your collection.</p>
+
+<h3 id="managing-indexes">Managing indexes across environments</h3>
+
+<p>There are many ways to manage the process by which indexes are created and defined in your various environments and MongoDB deployments. Therefore you should carefully consider how you manage this process.</p>
+
+<p>For databases that have gone into production, we recommend that you build your indexes in the background and at times that make the most sense for your app (e.g., during off-peak activity times). You can then maintain a separate script of <code class="highlighter-rouge">createIndex</code> calls to ensure these indexes are built in your development and staging environments as well.</p>
+
+<p>If you decide to put <code class="highlighter-rouge">createIndex</code> calls in your code, they should be called when your application initializes. However, if you go this route you must be careful about how this fits with your architecture and your deployment processes or else you might end up with indexes being built at unplanned (and undesirable) times.</p>
+
+<h2 id="performance-analysis">Performance analysis</h2>
+
+<h3 id="key-performance-tools">Key performance tools</h3>
+
+<p><em>Not available for Sandbox databases</em></p>
+
+<ul>
+  <li>Use <a href="/monitoring/#telemetry">mLab Telemetry</a> to view real-time and historical statistics of key MongoDB metrics.</li>
+  <li>View all operations taking over 100 milliseconds by <a href="/monitoring/#database-log-files">streaming the database server logs</a>.</li>
+  <li>Use <a href="/monitoring/#slow-query-analyzer">mLab Slow Query Analyzer</a> to view an aggregated report of slow queries and our automated index recommendations.</li>
+</ul>
+
+<h3 id="performance-indicators">Indicators of poor performance / Assessing headroom</h3>
+
+<p>We will be augmenting this portion of our documentation in the coming weeks. In the meantime, contact <a href="mailto:support@mlab.com">support@mlab.com</a> if you would like advice in this area.</p>
+<div class="footnotes">
+  <ol>
+    <li id="fn:foot-text">
+      <p>The <code class="highlighter-rouge">$indexStats</code> operator will be available on Sandbox and Shared plans once the fix for <a href="https://jira.mongodb.org/browse/SERVER-26734">SERVER-26734</a> is available for supported versions. <a href="#fnref:foot-text" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+</div>
+      <div class="page-overlay" js-page-overlay>
+        <div class="page-overlay--close"></div>
+      </div>
+    </div>
+    <div class="clearer"></div>
+    <div id="footer">
+      <div>
+        &#169; Copyright 2018 by ObjectLabs Corporation. All Rights Reserved.
+      </div>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-307557-10', 'auto');
+          ga('require', 'displayfeatures');
+          ga('require', 'linkid', 'linkid.js');
+          ga('send', 'pageview');
+        </script>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+      anchors.options = {
+        placement: 'left'
+      };
+      anchors.add('h2, h3, h4, h5');
+    </script>
+  </body>
+</html>

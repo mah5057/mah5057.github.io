@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="mLab security announcement">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>Scheduled maintenance for GHOST vulnerability | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,115 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="scheduled-maintenance-for-ghost-vulnerability">Scheduled maintenance for GHOST vulnerability</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#maintenance-window" id="markdown-toc-maintenance-window">Scheduled maintenance window details</a></li>
+  <li><a href="#avoiding-the-window" id="markdown-toc-avoiding-the-window">How to preemptively avoid the maintenance window</a></li>
+  <li><a href="#faq" id="markdown-toc-faq">Frequently Asked Questions</a>    <ul>
+      <li><a href="#how-can-sandbox-and-other-single-node-plans-avoid-downtime" id="markdown-toc-how-can-sandbox-and-other-single-node-plans-avoid-downtime">How can Sandbox and other single-node plans avoid downtime?</a></li>
+      <li><a href="#how-can-i-tell-if-my-deployments-will-be-impacted-by-this-window" id="markdown-toc-how-can-i-tell-if-my-deployments-will-be-impacted-by-this-window">How can I tell if my deployment(s) will be impacted by this window?</a></li>
+      <li><a href="#why-cant-i-see-any-reboot-host-links" id="markdown-toc-why-cant-i-see-any-reboot-host-links">Why can’t I see any “Reboot host” links?</a></li>
+    </ul>
+  </li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 id="overview">Overview</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<div class="note-box note-box">
+  <p>The following email notification was sent out, on February 5 2015, to the technical contact of every mLab account with at least one database subscription.</p>
+</div>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<p>Dear mLab user,</p>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<p>As you may have already heard, <a href="https://community.qualys.com/blogs/laws-of-vulnerabilities/2015/01/27/the-ghost-vulnerability">a vulnerability in glibc, codenamed GHOST (CVE-2015-0235)</a>, was announced on January 27, 2015.</p>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<p>Our current assessment is that no immediately exploitable vulnerability exists in our infrastructure or our fleet of virtual machines running database servers. Nonetheless, as a precautionary measure, we have been working hard to patch all of our virtual machines, including the ones running customer database deployments.</p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<p>At this point we have patched all of mLab’s infrastructure and have deployed an updated glibc to hosts running customer database deployments. The next step is to reboot all virtual machines in our fleet that still need the patch. These reboots are scheduled for a maintenance window starting February 17, 2015 at 08:00 UTC and ending February 22, 2015 at 08:00 UTC.</p>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
-
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
-
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
-
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
-
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
-
-<h2 id="load-data">Step 4: Load some data</h2>
-
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>You have two choices in how you interact with this maintenance:</p>
 
 <ol>
   <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
+    <p>Do nothing and let us completely handle this maintenance for you. If you have a cluster plan and your application/driver is configured properly for replica set connections, you should experience no downtime except during failover.</p>
   </li>
   <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
-
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
+    <p>For Dedicated plans only, <a href="#avoiding-the-window">preemptively avoid the scheduled maintenance window </a> by rebooting the virtual machines backing your deployment(s) through our management portal before February 17, 2015 at 08:00 UTC.</p>
   </li>
 </ol>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p>If you have any questions, please email us at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
+<p>Best regards,<br />
+The mLab Ops Team</p>
 
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
+<h2 id="maintenance-window">Scheduled maintenance window details</h2>
 
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
+<ul>
+  <li>5-day window starting February 17, 2015 at 08:00 UTC and ending February 22, 2015 at 08:00 UTC</li>
+  <li>At some point during this window all virtual machines will be rebooted if necessary except those backing Sharded Clusters</li>
+  <li>Estimated downtime per plan type
+    <ul>
+      <li>Sandbox plans: up to 30 minutes of downtime</li>
+      <li>Shared plans:
+        <ul>
+          <li>Single-node plans (discontinued): up to 30 minutes of downtime</li>
+          <li>Replica Set cluster plans: No downtime; however, the cluster will experience one failover and be without redundancy for up to 30 minutes</li>
+        </ul>
+      </li>
+      <li>Dedicated plans
+        <ul>
+          <li>Single-node plans: approximately 5 minutes of downtime</li>
+          <li>Replica Set cluster plan: No downtime; however, the cluster will experience one failover and be without redundancy for approximately 5 minutes</li>
+        </ul>
+      </li>
+      <li>Sharded Cluster Dedicated plans
+        <ul>
+          <li>Unaffected by this scheduled maintenance window; expect a separate notification for custom coordination</li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
 
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<h2 id="avoiding-the-window">How to preemptively avoid the maintenance window</h2>
+
+<p><em>Not available for Sandbox and Shared plans</em></p>
+
+<p>If you would like to avoid the scheduled maintenance window, you can preemptively reboot the virtual machines backing your Dedicated plan deployment(s) before the scheduled maintenance window.</p>
+
+<p>For a Dedicated Cluster plan:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal</li>
+  <li>Navigate to the MongoDB deployment in question</li>
+  <li>Click on the “Servers” tab</li>
+  <li>Click on the “Reboot host” link(s).</li>
+</ol>
+
+<p>You will want to reboot one node at a time and wait until that node has restarted before rebooting another. When you reboot your primary node it will first step down causing your application to failover.</p>
+
+<h2 id="faq">Frequently Asked Questions</h2>
+
+<h3 id="how-can-sandbox-and-other-single-node-plans-avoid-downtime">How can Sandbox and other single-node plans avoid downtime?</h3>
+
+<p>If you have a single-node plan and are concerned about downtime, we recommend that you <a href="http://docs.mlab.com/subscriptions/#change-plans">upgrade to any cluster plan</a> prior to this window (see <a href="https://mlab.com/plans/pricing">pricing</a>). Note that this will require a change to your connection string.</p>
+
+<h3 id="how-can-i-tell-if-my-deployments-will-be-impacted-by-this-window">How can I tell if my deployment(s) will be impacted by this window?</h3>
+
+<p>If your deployment will be impacted by this scheduled maintenance window, you will see a status message after you:</p>
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal</li>
+  <li>Navigate to the MongoDB deployment in question</li>
+</ol>
+
+<h3 id="why-cant-i-see-any-reboot-host-links">Why can’t I see any “Reboot host” links?</h3>
+
+<p>If our management portal indicates that your Dedicated Cluster plan will be impacted by this maintenance window and yet you do not see any “Reboot host” links, it means that we need to actually replace the underlying virtual machine(s) backing your deployment which we will be doing during the maintenance window. You will experience no downtime from this maintenance, but will experience a failover and be without redundancy for approximately 5 minutes.</p>
+
+<p>In this situation, if you’d like to avoid the maintenance window, contact us at support@mlab.com, and we will perform a <a href="/ops/#rolling-node-replacement">rolling node replacement</a> so that your hosts are no longer vulnerable.</p>
 
 </div>
       <div class="page-overlay" js-page-overlay>

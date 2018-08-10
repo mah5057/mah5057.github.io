@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="MongoDB driver connection timeout and socket timeout values determine how long your application waits to establish connections or wait for responses">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>Setting timeout values | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,73 +148,52 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="setting-timeout-values">Setting timeout values</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#connection-timeout" id="markdown-toc-connection-timeout">Connection timeout</a></li>
+  <li><a href="#socket-timeout" id="markdown-toc-socket-timeout">Socket timeout</a></li>
+  <li><a href="#resources" id="markdown-toc-resources">Further your knowledge</a></li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<p></p>
+<p>At a high level, whenever you create or use a MongoClient object to talk to your database, the driver establishes a connection to your MongoDB server. How long your application waits for the initial connection to be established and how long it waits for responses to subsequent requests is determined by the values of your <a href="https://docs.mongodb.com/v3.4/reference/connection-string/#connection-options">connection and socket timeouts</a>.</p>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<h2 id="connection-timeout">Connection timeout</h2>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<p>The connection timeout value determines the maximum amount of time your driver will wait for a connection to be established with the server.</p>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<p>This value is only used when making an initial connection to your database, and so selecting the correct setting for this timeout can be a balancing act.</p>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<p>On the one hand you want to make sure that your connection timeout is high enough that your application can reliably establish a connection to the database server, even in the face of high server load or intermittent network lag. On the other hand you don’t want the timeout to be so large that your application “hangs” for an inordinate amount of time while it waits to connect to a server that may be temporarily unreachable; in this case you will want to propagate the error state up to your users in a relatively timely matter and too high a timeout can make this difficult.</p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<p>The default driver connection timeout value ranges anywhere from 1 second (e.g. the Node.JS driver in some cases) to 30 seconds (e.g  the Ruby driver), so you really need to think about what the optimal setting is for your use case.</p>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
+<h3 class="no_toc" id="our-suggestions-for-the-connection-timeout">Our suggestions for the connection timeout</h3>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
+<p>For connections made through a Platform-as-a-Service (PaaS) such as Heroku, we recommend a timeout of 30 seconds since your application is likely running in a container that can be “idled” or “passivated” during periods of low activity. In such cases it may take longer for your code to establish new database connections when your application is made active again.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
+<p>For faster connection failures, you can adjust the timeout value down as needed.</p>
 
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
+<p>Of course, we also recommend that you use <a href="http://blog.mlab.com/2013/11/deep-dive-into-connection-pooling/">connection pooling</a> so that you are seldom creating new connections to the database server.</p>
 
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
+<h2 id="socket-timeout">Socket timeout</h2>
 
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
+<p>The socket timeout option specifies to your driver how long to wait for responses from the server. This timeout governs all types of requests (queries, writes, commands, authentication, etc.).</p>
 
-<h2 id="load-data">Step 4: Load some data</h2>
+<p>For example, if you have this timeout set to 30 seconds, your driver will never wait more than 30 seconds for the result of a query (although the query will continue to run to completion on the server). While there are some types of operations where you might consider defining a hard timeout (e.g. authentication), you usually don’t want to limit the amount of time your database operations take as they can be inherently variable.</p>
 
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>The default socket timeout value for most drivers is infinite (i.e. no timeout) which is usually expressed as 0 or a null value.</p>
 
-<ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
+<h3 class="no_toc" id="our-suggestions-for-the-socket-timeout">Our suggestions for the socket timeout</h3>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
+<p>We suggest leaving this setting at the default (i.e. no timeout) unless you have good reason to change it. That said, some drivers allow you to control this setting on a per operation basis, in which case you may consider fine-tuning this setting based on your knowledge of specific operations.</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
-</ol>
+<h2 id="resources">Further your knowledge</h2>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p>Each <a href="https://docs.mongodb.com/v3.4/applications/drivers/">MongoDB driver</a> implements the MongoClient class and these network timeout options differently. If you would like to investigate these timeout options further, you can peruse each specific driver’s documentation and source code for details on how to configure these options with that driver.</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
-
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
-
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
-
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
-
+<p>These timeouts are only two of many MongoDB driver options available to you. We encourage you to explore and learn more about your driver configuration settings so that you may fine-tune your app with optimal settings based on your use case.</p>
 </div>
       <div class="page-overlay" js-page-overlay>
         <div class="page-overlay--close"></div>

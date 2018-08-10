@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="mLab announcement regarding MongoDB version upgrades on November 19, 2014">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>Version upgrades of mLab Sandbox and Shared plan databases | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,64 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h2 id="important-notice-version-upgrades-of-mlab-sandbox-and-shared-plan-databases-on-nov-19">Important Notice: Version upgrades of mLab Sandbox and Shared plan databases on Nov. 19</h2>
 
-<ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+<p>Dear mLab user,</p>
+
+<p>Thank you for powering your app with mLab! You are receiving this email because you have one or more databases that will be affected by upcoming maintenance.</p>
+
+<p>We are in the process of making MongoDB 2.6 the default version for all newly provisioned deployments. We are also working to discontinue our support for MongoDB 2.2.</p>
+
+<p>As part of this process, on Wednesday November 19 we’ll be upgrading all free Sandboxes databases running MongoDB 2.4 to MongoDB 2.6. We will also be upgrading all for-pay Shared databases running MongoDB 2.2 to MongoDB 2.4.</p>
+
+<h3 id="key-details-about-this-maintenance-window">Key details about this maintenance window</h3>
+
+<ul>
+  <li>Sandbox and Shared Single-node databases will be unavailable for approximately 1 minute at some point during a 12-hour window. Shared Cluster databases will experience no downtime from this maintenance, just failovers.</li>
+  <li>This 12-hour maintenance window starts Wednesday November 19 at 10:30 am PST / 6:30 pm UTC (convert to your timezone).</li>
+  <li>You must ensure that your Sandbox databases running 2.4 meet the <a href="http://0.0.0.0:4000/db-version-requirements/#v26">upgrade requirements for 2.6</a> which include instructions on how to run the <a href="http://docs.mongodb.org/v2.6/reference/method/db.upgradeCheck/#db.upgradeCheck">preliminary check for upgrade preparedness to 2.6</a>.</li>
+  <li>You must also ensure that your for-pay Shared databases running 2.2 meet the <a href="http://0.0.0.0:4000/db-version-requirements/#v24">upgrade requirements for 2.4</a>.</li>
+  <li>No other configuration changes will be necessary on your end.</li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h3 id="determining-your-current-mongodb-version">Determining your current MongoDB version</h3>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>You can check what version of MongoDB your database is currently running by looking at the lower-right corner of your connection string box after logging into our management portal and navigating to your database’s home page (<a href="http://0.0.0.0:4000/ops/#current-version">see screenshot of where to find this information</a>).</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<h3 id="how-to-avoid-this-maintenance-window">How to avoid this maintenance window</h3>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<p>If the maintenance window that we’ve chosen doesn’t work well with your schedule, you can pre-emptively upgrade versions and/or plans prior to the scheduled window. Please see details below for your specific plan type.</p>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<p><strong>Sandbox (version 2.4)</strong></p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<p>All of our free Sandbox databases running 2.4 will be upgraded to 2.6 during this scheduled window.</p>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
+<p>If you’d like to avoid this window, you can <a href="http://0.0.0.0:4000/subscriptions/#change-plans">upgrade to any for-pay plan</a> running 2.4 or 2.6 prior to this window (see <a href="https://mlab.com/plans/pricing">pricing</a>). Note that this will require a change to your connection string.</p>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
+<p><strong>For-pay Shared (version 2.2)</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
+<p>All of our databases running 2.2 on shared virtual machines will be upgraded to 2.4 during this scheduled window.</p>
 
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
+<p>If you’d like to avoid this window, you can <a href="http://0.0.0.0:4000/ops/#change-version">upgrade to 2.4 (and optionally, 2.6)</a> prior to this window. If you’d like to stay on 2.2, you can upgrade to a Dedicated plan running 2.2 prior to the window (see <a href="https://mlab.com/plans/pricing">pricing</a>). Please note, however, that we plan to discontinue 2.2 support over the next quarter on our Dedicated plans as well.</p>
 
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
+<p><strong>For-pay Shared (version 2.4)</strong></p>
 
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
+<p>Your database will not be touched during this maintenance window. That being said, if you are using us via one of our <a href="https://mlab.com/company/partners">Platform-as-a-Service partners</a>, please note the default version for all newly provisioned databases will become 2.6 at the time of this scheduled window.</p>
 
-<h2 id="load-data">Step 4: Load some data</h2>
+<p><strong>Dedicated (version 2.2)</strong></p>
 
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>Your database will not be touched during this maintenance window. However, please note that we intend to discontinue 2.2 support over the next quarter on our Dedicated plans as well. We recommend that you carefully review the <a href="http://0.0.0.0:4000/db-version-requirements/#v24">upgrade requirements for 2.4</a> and the <a href="http://0.0.0.0:4000/db-version-requirements/#v26">upgrade requirements for 2.6</a> as soon as possible and plan accordingly.</p>
 
-<ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
+<p><strong>Dedicated (version 2.4)</strong></p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
+<p>Your database will not be touched during this maintenance window. However, you can <a href="http://0.0.0.0:4000/ops/#change-version">upgrade versions</a> to 2.6 at any time; please be sure to carefully review the <a href="http://0.0.0.0:4000/db-version-requirements/#v26">upgrade requirements for 2.6</a> first.</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
-</ol>
+<h3 id="additional-help">Additional help</h3>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p>As always, contact us anytime at <a href="mailto:support@mlab.com">support@mlab.com</a> with any questions, issues, or feedback.</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
-
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
-
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
-
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<p>Best regards,<br />
+mLab Operations</p>
 
 </div>
       <div class="page-overlay" js-page-overlay>

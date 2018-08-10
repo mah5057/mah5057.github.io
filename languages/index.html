@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="mLab provides MongoDB driver examples in many of the major languages like C#, Java, Node.js, PHP, Python, and Ruby">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>Language Center | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,78 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="language-center">Language Center</h1>
 
-<ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+<h2 id="overview">Overview</h2>
+
+<p>mLab is happy to provide driver examples in many of the major languages: C#, Java, Node.js, PHP, Python, and Ruby.</p>
+
+<p>These examples should run outright after you install the appropriate drivers and insert your MongoDB URI. For additional information, <a href="https://docs.mongodb.com/v3.4/applications/drivers/">see MongoDB, Inc.’s documentation about MongoDB drivers</a>.</p>
+
+<p>Currently, we illustrate a simple connection with authentication and query examples. If you have suggestions for other types of examples or languages, contact us at <a href="mailto:support@mlab.com">support@mlab.com</a> to let us know.</p>
+
+<h2 id="csharp">CSharp</h2>
+
+<p>The officially supported <a href="https://docs.mongodb.com/ecosystem/drivers/csharp/">C# / .NET driver</a> driver for MongoDB:</p>
+
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/c%23/CSharpSimpleExample.cs">CRUD example</a></li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<h2 id="java">Java</h2>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>The officially supported <a href="https://docs.mongodb.com/ecosystem/drivers/java/">Java driver</a> for MongoDB:</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/java/JavaSimpleExample.java">CRUD example</a></li>
+</ul>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<h2 id="nodejs">Node.js</h2>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<p>The officially supported <a href="https://docs.mongodb.com/ecosystem/drivers/node-js/">Node.js Native driver</a> for MongoDB:</p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/nodejs/nodeSimpleExample.js">CRUD example</a></li>
+</ul>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
+<p>Mongoose, an Object Document Mapper (ODM) for MongoDB:</p>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/nodejs/mongooseSimpleExample.js">Mongoose CRUD example</a></li>
+  <li><a href="http://blog.mlab.com/2014/04/mongodb-driver-mongoose/">Mongoose Tips &amp; Tricks</a> (from mLab’s blog)</li>
+</ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
+<h2 id="php">PHP</h2>
 
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
+<p>The officially supported <a href="https://docs.mongodb.com/ecosystem/drivers/php/">PHP driver</a> for MongoDB:</p>
 
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/php/php_simple_example.php">CRUD example</a></li>
+  <li><a href="http://blog.mlab.com/2014/05/mongodb-driver-tips-tricks-php/">PHP Driver Tips &amp; Tricks</a> (from mLab’s blog)</li>
+</ul>
 
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
+<h2 id="python">Python</h2>
 
-<h2 id="load-data">Step 4: Load some data</h2>
+<p>Pymongo, the officially supported <a href="https://docs.mongodb.com/ecosystem/drivers/python/">Python driver</a> for MongoDB:</p>
 
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/python/pymongo_simple_example.py">CRUD example</a></li>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/python/pymongo_production_connection_example.py">Production connection example</a></li>
+</ul>
 
-<ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
+<h2 id="ruby">Ruby</h2>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
+<p>The officially supported <a href="https://docs.mongodb.com/ecosystem/drivers/ruby/">Ruby driver</a> for MongoDB:</p>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
-</ol>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/blob/master/ruby/ruby-driver/ruby_simple_example.rb">CRUD example</a></li>
+</ul>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<p><a href="http://mongoid.org/en/mongoid/">Mongoid</a>, an Object Document Mapper (ODM) for MongoDB:</p>
 
-<h2 id="everything-else">Everything else you need to know</h2>
-
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
-
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
-
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<ul>
+  <li><a href="https://github.com/mongolab/mongodb-driver-examples/tree/master/ruby/mongoid">CRUD example</a></li>
+</ul>
 
 </div>
       <div class="page-overlay" js-page-overlay>

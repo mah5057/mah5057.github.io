@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <meta name="Description" content="Support documentation on how to get started and use your mLab hosted MongoDB database">
+    <meta name="Description" content="mLab and EU Data Protection (GDPR, Privacy Shield, etc.)">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Quick-Start Guide to mLab | mLab Documentation & Support</title>
+    <title>EU Data Protection | mLab Documentation & Support</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
 
     <!-- favicon -->
@@ -148,72 +148,52 @@
         </div>
       </div>
       <div id="content" class="content-section">
-<h1 class="no_toc" id="quick-start-guide-to-mlab">Quick-Start Guide to mLab</h1>
+<h1 class="no_toc" id="eu-data-protection">EU Data Protection</h1>
 
 <ul id="markdown-toc">
-  <li><a href="#account-setup" id="markdown-toc-account-setup">Step 1: Set up an mLab account</a></li>
-  <li><a href="#create-sub" id="markdown-toc-create-sub">Step 2: Create a database subscription</a></li>
-  <li><a href="#connect" id="markdown-toc-connect">Step 3: Connect to your new database</a></li>
-  <li><a href="#load-data" id="markdown-toc-load-data">Step 4: Load some data</a></li>
-  <li><a href="#everything-else" id="markdown-toc-everything-else">Everything else you need to know</a></li>
+  <li><a href="#gdpr" id="markdown-toc-gdpr">GDPR</a></li>
+  <li><a href="#cross-border-data-transfer" id="markdown-toc-cross-border-data-transfer">Cross-Border Data Transfer (EU – U.S.)</a></li>
+  <li><a href="#privacy-shield-framework" id="markdown-toc-privacy-shield-framework">Privacy Shield Framework</a></li>
+  <li><a href="#faq" id="markdown-toc-faq">Frequently Asked Questions (FAQ)</a></li>
 </ul>
 
-<h2 id="account-setup">Step 1: Set up an mLab account</h2>
+<p>mLab recognizes that a large number of our customers operate in Europe and that many of these customers need to comply with European data protection laws.</p>
 
-<p>To get started with mLab, you must first <a href="https://mlab.com/signup">create your free mLab account</a>. When that’s complete, you can add as many database subscriptions as you want.</p>
+<p>We are and have always been committed to customer trust and to customer success. In this document we hope to keep you updated on where we are in terms of compliance with current European data protection standards and law.</p>
 
-<p>For additional information about managing your mLab account users, contacts, and billing, see <a href="/accounts">mLab Account Setup</a>.</p>
+<p>You can email <a href="mailto:support@mlab.com">support@mlab.com</a> with follow-up questions or concerns.</p>
 
-<h2 id="create-sub">Step 2: Create a database subscription</h2>
-<p>After you’ve created your account, <a href="https://mlab.com/create/wizard">add a new database subscription</a>. Get started quickly at no cost with a free Sandbox database.</p>
+<h2 id="gdpr">GDPR</h2>
 
-<p><img src="/assets/screenshot-createwizard.png" alt="img-newsub" /></p>
+<p>In 2016, the European Commission approved and adopted the new General Data Protection Regulation (GDPR). GDPR became effective May 25, 2018 and introduced significant changes in European data protection laws relative to the prior data protection provisions of the EU Data Protection Directive (also known as Directive 95/46/EC).</p>
 
-<p>For detailed steps on how to add a subscription, see <a href="/subscriptions">Database Subscriptions</a>. For a discussion on how to choose the right plan for your subscription, see <a href="/plans">Plans and Data Centers</a>.</p>
+<p>mLab has implemented the necessary practices and documentation to address the requirements of GDPR.  As part of our compliance efforts, we have created additional internal processes and procedures, further strengthened our organizational security measures, and updated our <a href="https://mlab.com/company/legal/privacy/">Privacy Policy</a>.  Additionally, as per GDPR requirements, we now have a Data Processing Addendum (DPA) available for our customers relative to our role as a Data Processor.</p>
 
-<h2 id="connect">Step 3: Connect to your new database</h2>
+<h2 id="cross-border-data-transfer">Cross-Border Data Transfer (EU – U.S.)</h2>
 
-<p>In a terminal window, connect to your database using the mongo shell (the command will look similar to the following example):</p>
+<p>The European Union (EU) has determined that certain countries outside of the EU, including the U.S., are considered “inadequate” for the purposes of protecting personal information moving outside the EU without additional legal and organizational safeguards.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345.mlab.com:56789/dbname -u dbuser -p dbpassword
-</code></pre></div></div>
+<p>To ensure that data crossing into the U.S. from the EU has an adequate level of protection for EU compliance, mLab has for many years utilized the “Standard Contractual Clauses” wording as prescribed by the EU to protect cross-border data transfer to the U.S.  GDPR has explicitly stated (Chapter V - Articles 44-50) that Standard Contractual Clauses is an accepted method of compliance for cross-border data transfer.</p>
 
-<p>You can create a database user and password and grab your connection info after logging into your account and navigating to the database’s home page:</p>
+<p>We currently include the Standard Contractual Clauses as part of our DPA until such time that we receive certification under the Privacy Shield Framework (see next section).</p>
 
-<p><img src="/assets/screenshot-connectinfo.png" alt="img-connectstring" /></p>
+<h2 id="privacy-shield-framework">Privacy Shield Framework</h2>
 
-<p>To view detailed connection instructions, troubleshooting tips, and alternate connection methods, see <a href="/connecting">Connecting to Your Database</a>.</p>
+<p>Another method to comply with the cross-border data adequacy provisions is through certification under the Privacy Shield Framework.  The EU-U.S. Privacy Shield Framework, designed by the U.S. Department of Commerce and the European Commission, is intended to guarantee the personal information of EU citizens the same privacy protection when processing in the U.S. as it would receive at home.  On July 12, 2016, the European Commission deemed the EU-U.S. Privacy Shield Framework adequate to enable data transfers under EU law.</p>
 
-<h2 id="load-data">Step 4: Load some data</h2>
+<p>Privacy Shield requires that U.S. businesses wishing to process EU citizen’s personal information self-certify that they will comply with seven major privacy principles and sixteen privacy sub-principles.  It is important to note that the Privacy Shield Framework, by itself, is not a substitute for compliance with GDPR. For more information visit the <a href="https://www.privacyshield.gov/Program-Overview">Privacy Shield Program Overview</a>.</p>
 
-<p>Here’s a quick exercise that tests an insertion into your new database:</p>
+<p>mLab is in the process of certifying under the Privacy Shield Framework and expects certification by Summer 2018.</p>
 
-<ol>
-  <li>
-    <p>Assuming you successfully connected using the mongo shell in the previous step, run the following command:</p>
+<h2 id="faq">Frequently Asked Questions (FAQ)</h2>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.insert({ "foo" : "bar" })
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>Next, run the command in the first line below and confirm that the shell output matches the second line (your “_id” value will be different):</p>
+<h3 class="no_toc" id="q-can-we-execute-a-data-processing-addendum-dpa-with-mlab">Q. Can we execute a Data Processing Addendum (DPA) with mLab?</h3>
 
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code> &gt; db.mynewcollection.find()
- { "_id" : ObjectId("526705b4a3559a176784b4af"), "foo" : "bar" }
-</code></pre></div>    </div>
-  </li>
-</ol>
+<p>Yes. Email <a href="mailto:support@mlab.com">support@mlab.com</a> to request our DPA.</p>
 
-<p>For additional instructions on how to get data, including larger datasets, into your mLab database, see <a href="/migrating">Migrating Data into mLab</a>.</p>
+<h3 class="no_toc" id="q-how-long-do-you-retain-customer-data">Q. How long do you retain customer data?</h3>
 
-<h2 id="everything-else">Everything else you need to know</h2>
-
-<p>Congratulations—you’ve successfully created an mLab database! You’re now on your way to discovering more about mLab’s services so be sure to read through our documentation to get the most out of mLab and your MongoDB deployment(s). We have a broad range of topics that covers all the information you need to know about working with your mLab-managed database(s).</p>
-
-<p>Our <a href="/support">Support</a> page also links to some great MongoDB resources that you’ll find super helpful.</p>
-
-<h3>Contact us</h3>
-<p>When in doubt, when you can’t find specific information, or when you’re just plain stuck, please don’t hesitate to email us directly at <a href="mailto:support@mlab.com">support@mlab.com</a>.</p>
+<p>We ensure that your data is deleted according to our <a href="/subscriptions/#data-deletion-policy">data deletion policy</a>.</p>
 
 </div>
       <div class="page-overlay" js-page-overlay>
