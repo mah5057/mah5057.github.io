@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="Description" content="Securing your MongoDB deployment with mLab Private Environments (AWS VPC Peering)">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>mLab Private Environments (VPC) | mLab Documentation & Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- favicon -->
+    <link href="https://mlab.com/base/img/favicon.ico?v=2" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/nosearch.css">
+    <link rel="stylesheet" href="/css/pygment_trac.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="/css/webfonts/MyFontsWebfontsKit.css" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+
+    <!-- Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Eliminate 300ms delay between a tap and the firing of the click event
+    on mobile browsers. -->
+    <script src="/javascripts/fastclick.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // Style the warning/note boxes
+        $(".critical-box").prepend('<div class="title"></div>');
+        $(".warning-box").prepend('<div class="title"></div>');
+        $(".note-box").prepend('<div class="title"></div>');
+        $(".announcement-box").prepend('<div class="title"></div>');
+
+        // Have all external links go to new tab
+        $("a[href^='http']").attr("target", "_blank");
+
+
+        // Give active left nav item the "active" class
+        var article = location.pathname;
+        article = article.substring(0, article.length - 1);
+        if (article.length > 0) {
+          $("#sidenav li a[href^='"+article+"']").parent().addClass("active");
+        } else {
+          $("#sidenav li a[href='/']").parent().addClass("active");
+        }
+
+        // Instantiate FastClick
+        FastClick.attach(document.body);
+
+        // Hack to improve buggy scroll container behavior on iOS Safari
+        // On doc.ready, set the scroll position to 1px
+        $("#sidenav").scrollTop(1);
+
+        // Make sure side nav never hit's the top or bottom by
+        // Making it offset from either by 1px
+        $("#sidenav").scroll(function () {
+          if ($(this).scrollTop() + $(this).innerHeight() == $(this)[0].scrollHeight) {
+            $(this).scrollTop($(this).scrollTop() - 1);
+
+          } else if ($(this).scrollTop() == 0) {
+            $(this).scrollTop(1);
+          }
+        });
+
+        $("[js-side-nav-toggle]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").on("touchmove", function (e) {
+          e.preventDefault();
+        });
+      });
+
+      function handleSidebarToggle () {
+        $("body").toggleClass("sidebar-open");
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
+  </head>
+  <body>
+    <div class="header">
+      <div class="header--side-nav-toggle" js-side-nav-toggle>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+      </div>
+      <a href="/" class="logo">
+        <img src="/css/img/mLab-logo-dark.svg" class="logo--image" />
+        <div class="logo--text">Docs + Support</div>
+      </a>
+      <div class="header--links">
+        <a href="https://mlab.com">mLab Home</a>
+        <a href="https://support.mlab.com">My Support Requests</a>
+        <a title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>" class="emailSupport">Email support@mlab.com</a>
+        <!--<a href="mailto:mLab Support<support@mlab.com>?body=Deployment Identifier (if applicable):%0D%0AmLab Account Name (if applicable):%0D%0A%0D%0A" class="emailSupport">Email support@mlab.com</a>-->
+      </div>
+    </div>
+    <div id="main" class="main">
+      <div id="sidenav" class="side-nav">
+        <ul>
+          <li><a href="/">Quick-Start Guide</a></li>
+          <li><a href="/accounts">mLab Account Setup</a></li>
+          <li><a href="/plans">Plans and Data Centers</a></li>
+          <li><a href="/private-environments">Private Environments</a></li>
+          <li><a href="/subscriptions">Database Subscriptions</a></li>
+          <li><a href="/connecting">Connecting</a></li>
+          <li><a href="/migrating">Migrating Data into mLab</a></li>
+          <li><a href="/languages">Language Center</a></li>
+          <li><a href="/monitoring">Monitoring and Alerts</a></li>
+          <li><a href="/indexing">Indexing and Performance</a></li>
+          <li><a href="/backups">Backup and Recovery</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/ops">Managing Your MongoDB Deployment</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href="/faq">Frequently Asked Questions (FAQ)</a></li>
+          
+          <li>
+            <a href="/unpublished/blankfile/">-------------------</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/markdown/">MARKDOWN SYNTAX</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/portal/">WRITING STYLE and TERMS</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/template/">TEMPLATE FOR NEW FILES</a>
+          </li>
+          
+        </ul>
+        <div class="side-nav--support-links">
+          <a class="side-nav--support-link" href="https://mlab.com">mLab Home</a>
+          <a class="side-nav--support-link" href="https://support.mlab.com">My Support Requests</a>
+          <a class="side-nav--support-link emailSupport" title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>">Email support@mlab.com</a>
+        </div>
+      </div>
+      <div id="content" class="content-section">
+<h1 class="no_toc" id="mlab-private-environments-vpc">mLab Private Environments (VPC)</h1>
+
+<ul id="markdown-toc">
+  <li><a href="#manage-private-environments" id="markdown-toc-manage-private-environments">Managing Private Environments</a>    <ul>
+      <li><a href="#create-private-environment" id="markdown-toc-create-private-environment">Creating a Private Environment</a></li>
+      <li><a href="#peering" id="markdown-toc-peering">Peering a Private Environment</a></li>
+      <li><a href="#delete-private-environment" id="markdown-toc-delete-private-environment">Deleting a Private Environment</a></li>
+    </ul>
+  </li>
+  <li><a href="#managing-deployments" id="markdown-toc-managing-deployments">Managing deployments within Private Environments</a>    <ul>
+      <li><a href="#create-deployment" id="markdown-toc-create-deployment">Creating a new deployment</a></li>
+      <li><a href="#migrate-deployment" id="markdown-toc-migrate-deployment">Migrating an existing deployment from EC2-Classic</a></li>
+      <li><a href="#firewall-rules" id="markdown-toc-firewall-rules">Managing inbound firewall rules</a></li>
+      <li><a href="#network-access-modes" id="markdown-toc-network-access-modes">Managing network access modes</a></li>
+      <li><a href="#move-out-of-public-access-mode" id="markdown-toc-move-out-of-public-access-mode">Steps to move out of “Public” network access mode</a></li>
+    </ul>
+  </li>
+  <li><a href="#troubleshooting-peering-connections" id="markdown-toc-troubleshooting-peering-connections">Troubleshooting peering connection issues</a></li>
+  <li><a href="#faq" id="markdown-toc-faq">Frequently Asked Questions (FAQ)</a></li>
+</ul>
+
+<h2 class="no_toc" id="overview">Overview</h2>
+
+<p><em>Available for Dedicated plans on AWS only</em></p>
+
+<p>An mLab Private Environment is a dedicated, software-defined network into which you can provision multiple mLab-hosted MongoDB deployments. Using a Private Environment allows you to limit communication between your application and your database to private networks.</p>
+
+<p>When you provision a Private Environment with mLab on AWS, we provision a VPC dedicated to your deployment(s) in mLab’s AWS account(s). You can then have any number of mLab-hosted MongoDB deployments inside of that Private Environment.</p>
+
+<p>Once the Private Environment has been provisioned, you can peer the VPC backing it to the AWS VPC that houses your application infrastructure. This peering operation will create a single, extended, private network consisting of both your application infrastructure and your database deployments.</p>
+
+<p><img src="/assets/img-private-environments.png" alt="img-private-environments" /></p>
+
+<p>Once peered, you can conveniently and scalably design network routing and firewall rules to allow access to your database deployment from only the parts of your application infrastructure that need it.</p>
+
+<h2 id="manage-private-environments">Managing Private Environments</h2>
+
+<p>Users can create and manage one or more Private Environments through the mLab management portal.</p>
+
+<h3 id="create-private-environment">Creating a Private Environment</h3>
+
+<p>To create a new Private Environment, follow these instructions:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, click “Create new” under the “Private Environments” section.</li>
+  <li>You will be prompted for a name, cloud region, and <a href="#choose-ip-address-space">IP address space</a>.
+    <ul>
+      <li>We recommend naming your Private Environment based on what applications or phase of development it will serve (e.g., Production, Staging, or Test). This name can be changed at any time.</li>
+      <li>The region must be the same as the VPC you are planning to peer with.</li>
+    </ul>
+  </li>
+  <li>Review your choices and when you’re ready, click the “Create new” button. Your new Private Environment will then be listed on your account’s Home page.</li>
+  <li>Once the Private Environment has been provisioned, you will be able to navigate to its home (administrative) page.</li>
+</ol>
+
+<h4 id="choose-ip-address-space" class="no_toc">Choosing an IP address space</h4>
+
+<p>When creating a Private Environment, you will be prompted to supply an IP address space. This is the set of IPs from which all private IPs used in the Private Environment will be drawn.</p>
+
+<div class="note-box note-box">
+  <p>It will be possible to change your Environment’s IP address space in the future by using our seamless <a href="/ops/#rolling-node-replacement">rolling node replacement</a> process.  That said, if you plan to VPC peer in the forseeable future, we recommend reviewing the IP address spaces used by your application servers and other products and services to look for potential routing conflicts so as to avoid the need for future maintenance.</p>
+</div>
+
+<h5 class="no_toc" id="ip-address-space-rules">IP address space rules</h5>
+
+<p>The IP address space that you supply when creating your mLab Private Environment must conform to the following rules:</p>
+
+<p><strong>(1) It MUST use IPv4 addresses exclusively</strong></p>
+
+<p>IPv4 addresses are 32 bits in size and commonly expressed as four octets written in decimal notation with values between 0 and 255 and dots (‘.’) in between octets, e.g. “192.168.0.1”.</p>
+
+<p>IPv6 addresses are not supported for use in the address space for Private Environments.</p>
+
+<p><strong>(2) It MUST be expressed as a /16 IPv4 CIDR block</strong></p>
+
+<p>You must supply a /16 <a href="https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing">CIDR</a> block, which is an IP address range that consists of 65,536 IP addresses (2^16 IPs). If, for example, you choose 172.21.0.0/16 for your IP address space, the private IPs of your mLab-hosted deployments in this Private Environment would then range from 172.21.0.0 to 172.21.255.255.</p>
+
+<p><strong>(3) It MUST be a private address space</strong></p>
+
+<p>The address space must be a subspace of the <a href="https://tools.ietf.org/html/rfc1918">RFC 1918</a> IPv4 private address space. Specifically:</p>
+
+<ul>
+  <li>10.0.0.0/8</li>
+  <li>172.16.0.0/12</li>
+  <li>192.168.0.0/16</li>
+</ul>
+
+<p><strong>(4) It MUST NOT overlap with the IP address space of any VPC with which you plan to peer your mLab-hosted VPC</strong></p>
+
+<p>The IP address space that you supply must not overlap with the IP address space of any of your app’s VPCs that you want to or could potentially want to peer with.</p>
+
+<p>For example, let’s say there are two VPCs that you plan to peer with:</p>
+
+<ul>
+  <li>App VPC #1 uses an IP address space of 10.0.0.0/16</li>
+  <li>App VPC #2 uses an IP address space of 172.19.1.0/24</li>
+</ul>
+
+<p>You would want to:</p>
+
+<ul>
+  <li>Avoid supplying an IP address space of 10.0.0.0/16 since it would match the IP address space of App VPC #1 exactly</li>
+  <li>Avoid supplying an IP address space of 172.19.0.0/16 since the IP address space of App VPC #2 would be within this space</li>
+</ul>
+
+<p><strong>(5) It MUST NOT create routing conflicts with transitive networks</strong></p>
+
+<p>The IP address space that you supply should not overlap with the IP address space of any VPC or other private network to which your peered VPC(s) can route. This includes, for example, Docker containers and networks routable via a VPN.</p>
+
+<p>If you do choose to overlap the IP address space with any transitive network, this must not create routing conflicts.</p>
+
+<p>For example, let’s say you were using the following network toplogy:</p>
+
+<ul>
+  <li>App VPC #1 uses 10.0.0.0/16
+    <ul>
+      <li>Peered with mLab Private Environment</li>
+    </ul>
+  </li>
+  <li>App VPC #2 uses 10.1.0.0/16
+    <ul>
+      <li>Not peered with mLab Private Environment</li>
+      <li>Peered with App VPC #1 therefore is part of transitive network topology</li>
+    </ul>
+  </li>
+</ul>
+
+<p>You would want to:</p>
+
+<ul>
+  <li>Avoid using 10.0.0.0/16 because it violates rule (4) above</li>
+  <li>Either:
+    <ul>
+      <li>Avoid using 10.1.0.0/16 OR</li>
+      <li>Somehow ensure no subnet in App VPC #1 ever needs to use the same IP in both App VPC #2 and your Private Environment</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Other examples of possible transitive networks:</p>
+
+<ul>
+  <li>Corporate VPN</li>
+  <li><a href="https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/vpc-classiclink.html">EC2 ClassicLink</a> uses 10.0.0.0/16 and 10.1.0.0/16</li>
+</ul>
+
+<h4 class="no_toc" id="ip-address-space-tips">IP address space tips</h4>
+
+<p>Avoid these IP address spaces unless you know what you’re doing:</p>
+
+<ul>
+  <li>10.0.0.0/16 - heavily used</li>
+  <li>192.168.0.0/16 - heavily used</li>
+  <li>172.16.0.0/16 - heavily used</li>
+  <li>172.17.0.0/16 - Docker’s default</li>
+</ul>
+
+<p>These IP address spaces are not as popular and are the least likely to
+cause collision:</p>
+
+<ul>
+  <li>172.19.0.0/16, 172.21.0.0/16, 172.23.0.0/16, 172.25.0.0/16, 172.27.0.0/16, 172.29.0.0/16</li>
+</ul>
+
+<h3 id="peering">Peering a Private Environment</h3>
+
+<p>To create a new peering connection between your application’s VPC and your mLab Private Environment, follow these instructions:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the Private Environment that you would like to create a peering connection with.</li>
+  <li>Click the “Peerings” tab.</li>
+  <li>Click the “Add peering connection” button.</li>
+  <li>In the form that appears, provide your <a href="http://docs.aws.amazon.com/IAM/latest/UserGuide/console_account-alias.html">AWS account ID</a> and VPC ID.
+    <ul>
+      <li>This VPC’s region must be the same as your mLab Private Environment’s region.</li>
+    </ul>
+  </li>
+  <li>Click “Start peering process” to initiate the peering request.</li>
+  <li>Accept the peering connection from mLab via the <a href="http://docs.aws.amazon.com/AmazonVPC/latest/PeeringGuide/working-with-vpc-peering.html#accept-vpc-peering-connection">AWS console</a>.
+    <ul>
+      <li>You’ll need to first log in to your AWS account.</li>
+      <li>Navigate to the correct region and the “VPC Dashboard”.</li>
+      <li>Under the “Peering Connections” section, select the peering connection and “Accept Request”.</li>
+    </ul>
+  </li>
+  <li>When the peering connection is complete, you will see “active” for peering connection STATUS.
+    <ul>
+      <li>Note that this change can take a few minutes to propagate to mLab’s management console.
+<img src="/assets/screenshot-peering-success.png" alt="img-peering-success" /></li>
+    </ul>
+  </li>
+  <li>Add this peering connection to each route table that your app uses.
+    <ul>
+      <li>For help with this, see the question about <a href="#updating-route-tables">updating route tables</a> in our FAQ section below.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>You have now successfully peered your application’s VPC to the mLab-hosted VPC. In order to actually connect to your database, you’ll still need to open up your mLab-hosted deployment’s firewall to your VPC by <a href="#firewall-rules">adding inbound allow rules</a> which whitelist an IP address range or Security Group within your VPC.</p>
+
+<h3 id="delete-private-environment">Deleting a Private Environment</h3>
+
+<p>To delete your Private Environment, follow these instructions:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the Private Environment that you would like to delete.</li>
+  <li>Click the “Delete environment” button.</li>
+  <li>Click the “Delete” button.</li>
+</ol>
+
+<h2 id="managing-deployments">Managing deployments within Private Environments</h2>
+
+<h3 id="create-deployment">Creating a new deployment</h3>
+
+<p>You can place a new deployment in a Private Environment by selecting a specific Private Environment during the <a href="/subscriptions/#create-deployment">deployment creation process</a>.</p>
+
+<p>When provisioning into a Private Environment, you can provision into either the Public or Private network access mode directly. Documentation about <a href="#network-access-modes">network access modes and how to manage them</a> follows in a section below.</p>
+
+<h3 id="migrate-deployment">Migrating an existing deployment from EC2-Classic</h3>
+
+<div class="note-box note-box">
+  <p>You should <em>not</em> set up VPC Peering before you migrate your deployment to Private Environment as we will leave your deployment in Public network access mode initially.  VPC Peering can be done after the migration whenever you are ready.</p>
+</div>
+
+<p>We can seamlessly migrate the data-bearing nodes of any existing Dedicated Cluster deployment into a Private Environment using our <a href="/ops/#rolling-node-replacement">rolling node replacement process</a>. This is the same process that we use for plan upgrades/downgrades and compactions which allows you to maintain high availability and requires no changes to connection string(s).</p>
+
+<p>To migrate an existing deployment to a Private Environment, follow these steps:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>Navigate to the MongoDB deployment that you want migrated to a Private Environment.</li>
+  <li>On the “Networking” tab, validate that you can proceed:
+    <ul>
+      <li>Ensure you have under 25 inbound allow rules.</li>
+      <li>Ensure that you do not have any inbound allow rules from <code class="highlighter-rouge">10.0.0.0/8</code> (EC2-Classic) or EC2-Classic Security Groups.</li>
+      <li>Contact support@mlab.com if you could use assistance.</li>
+    </ul>
+  </li>
+  <li>On the “Tools” tab, under the “Initiate maintenance operation” header, select the “Migrate to a Private Environment (EC2-VPC)” option.</li>
+  <li>In the options that follow, first select the desired Private Environment.
+    <ul>
+      <li>You can choose an existing Private Environment already created for your mLab account (they will be listed here by name) OR</li>
+      <li>You can create a new one.  If you are not planning to VPC peer in the forseeable future, you can use a default IP address range. Otherwise <a href="#choose-ip-address-space">choose a IP address space</a>. We recommend naming your Private Environment based on what applications or phase of development it will serve (e.g., Production, Staging, or Test); this display name can be changed at any time.</li>
+    </ul>
+  </li>
+  <li>Next, choose a failover option.
+    <ul>
+      <li>A failover will be required to complete this process. If you are not confident that your clients have been configured with <a href="/connecting/#replica-set-connections">replica set connections that can handle failover</a> and/or you’d like to be conservative with this maintenance, we recommend selecting the “Manual Failover” option which is to initiate the failover yourself. This way you can fail back over to your original Primary in case of an unexpected issue.</li>
+    </ul>
+  </li>
+  <li>Click the “Migrate to a Private Environment” button. Once you confirm, the seamless <a href="/ops/#rolling-node-replacement">rolling node replacement</a> process will begin.
+    <ul>
+      <li>If you have chosen to initiate the failover yourself, you will need to perform the failover before the migration to  a Private Environment can be completed. Check your email (or the Technical Contact’s email) for maintenance updates.</li>
+    </ul>
+  </li>
+  <li>(Optional) Set up VPC Peering and transition your deployment from the Public network access mode to one of the Private modes
+    <ul>
+      <li>Documentation about <a href="#network-access-modes">network access modes and how to manage them</a> follows in a section below.</li>
+    </ul>
+  </li>
+</ol>
+
+<h3 id="firewall-rules">Managing inbound firewall rules</h3>
+
+<p>You can specify which IP address ranges or Security Groups within your VPC should have inbound access to your database deployment.</p>
+
+<p>When you add in an additional inbound allow rule, we will make changes to both your firewall and routing rules.</p>
+
+<p>Follow these instructions to allow in an IP address range:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>Navigate to the MongoDB deployment that you want to configure.</li>
+  <li>Click the “Networking” tab.</li>
+  <li>Click the “Add IP address range rule(s)”.</li>
+  <li>Select a Network.
+    <ul>
+      <li>When allowing in private IP addresses, select the VPC of the private IP addresses.</li>
+      <li>When allowing public IP addresses, select “Public Internet”.</li>
+    </ul>
+  </li>
+  <li>Enter the IP address range, expressed as an IPv4 CIDR block and optionally, a description for the rule.</li>
+  <li>Click the “Add” button.</li>
+  <li>Optionally, you can make additional changes to the firewall rules.</li>
+  <li>Click the “Apply security changes” button to apply the firewall rules.
+    <ul>
+      <li>If you want to revert back to the firewall rule(s) before the changes, click the “Revert changes” link.</li>
+    </ul>
+  </li>
+</ol>
+
+<p>Follow these instructions to allow in a Security Group within your VPC:</p>
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>Navigate to the MongoDB deployment that you want to configure.</li>
+  <li>Click the “Networking” tab.</li>
+  <li>Click the “Add Security Group rule”.</li>
+  <li>In the “Network” field, select the VPC of the Security Group.</li>
+  <li>Enter the Security Group’s ID and optionally, a description for the rule.</li>
+  <li>Click the “Add” button.</li>
+  <li>Optionally, you can make additional changes to the firewall rules.</li>
+  <li>Click the “Apply security changes” button to apply the firewall rules.
+    <ul>
+      <li>If you want to revert back to the firewall rule(s) before the changes, click the “Revert changes” link.</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 id="copy-firewall-rules" class="no_toc">Copy firewall rules from an existing deployment</h4>
+
+<p>For convenience, you can use the “Copy existing rules” button to copy firewall rules from an existing deployment within the same Private Environment as your deployment. This saves you the effort of having to add each firewall rule one by one.</p>
+
+<p>Follow these instructions to copy existing inbound allow rules from an existing deployment:</p>
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>Navigate to the MongoDB deployment that you want to configure.</li>
+  <li>Click the “Networking” tab.</li>
+  <li>Click the “Copy existing rules”.</li>
+  <li>Select the deployment from which you want to replace the firewall rules with.</li>
+  <li>Click the “Submit” button.</li>
+  <li>Optionally, you can make additional changes to the firewall rules.</li>
+  <li>Click the “Apply security changes” button to apply the firewall rules.
+    <ul>
+      <li>If you want to revert back to the firewall rule(s) before the copy, click the “Revert changes” link.</li>
+    </ul>
+  </li>
+</ol>
+
+<div class="note-box note-box">
+  <p>We allow a max of 25 CIDR block rules. This is a hard limit which cannot be changed.</p>
+</div>
+
+<h3 id="network-access-modes">Managing network access modes</h3>
+
+<div class="note-box note-box">
+  <p>If your deployment is in an <a href="https://aws.amazon.com/about-aws/global-infrastructure/">AWS region with only two Availability Zones</a>, it is possible that the arbiter node was originally placed in a different region to increase the likelihood of availabilty.</p>
+
+  <p>If this is the case, you will not be able to change your deployment’s network access mode from Public mode to one of the Private modes until you contact us at <a href="mailto:support@mlab.com">support@mlab.com</a> requesting that we move your arbiter into the same Availability Zone as one of your data-bearing nodes. When you do so, be aware of the <a href="/plans/#two-az-regions-faq">downsides of just two Availability Zones</a>.</p>
+</div>
+
+<p>You can choose between three different network access modes for your deployments in a Private Environment: Public, Private (Dual Access), and Private. To switch between network access modes:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>Navigate to the MongoDB deployment that you want to configure.</li>
+  <li>Click the “Networking” tab.</li>
+</ol>
+
+<p>Network access modes determine:</p>
+
+<ul>
+  <li>How a deployment’s DNS is routed, using either a public or private IP address</li>
+  <li>Whether a deployment is accessible via its public IP address</li>
+</ul>
+
+<h4 class="no_toc" id="public-mode">Public mode</h4>
+
+<p>In the Public network access mode, traffic to a deployment via the <a href="/connecting/#connect-string">standard MongoDB connection string URI</a> that we publish is routed via the deployment’s public IP addresses.</p>
+
+<p>Note that this mode also allows you to access the deployment via its private IP addresses. Before switching from Public to Private (Dual Access) mode, you should test connecting to your deployment via private IPs.</p>
+
+<p><strong>Test Private IP access from your VPC before leaving Public mode</strong></p>
+
+<p>From a machine in your VPC, confirm that you can connect to your deployment by appending “-internal” to the leading part of the DNS address. This address is mapped to the private IP address that the deployment’s addresses will be remapped to use when switching to Private mode.</p>
+
+<p>For example, you could test access by connecting via the <code class="highlighter-rouge">mongo</code> shell to one of the nodes in your deployment. In this example, the address in your connection string is “ds012345-a0.mlab.com:12345” but you would test the “-internal” version of this address.  To get the “-internal” address from the connection string, append “-internal” to the string to the left of the first period.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% mongo ds012345-a0-internal.mlab.com:12345
+</code></pre></div></div>
+
+<p>If this test fails, review the <a href="#troubleshooting-peering-connections">troubleshooting section below on peering connection issues</a>.  In particular, ensure that you have added the VPC peering connection to your route table(s) and that you’ve added your application’s VPC to your firewall whitelist (an inbound allow rule to 0.0.0.0/0 over the Public Internet is <em>not</em> sufficient).</p>
+
+<p>For SSL-enabled deployments, if you run into trouble with this test please contact <a href="mailto:support@mlab.com">support@mlab.com</a> for help.</p>
+
+<div class="warning-box warning-box">
+  <p>You should <em>not</em> change the connection string that your application within your peered VPC is using. The “-internal” address that we have made available is to be used only for testing purposes.</p>
+</div>
+
+<h4 class="no_toc" id="private-dual-access-mode">Private (Dual Access) mode</h4>
+
+<p>In the Private (Dual Access) network access mode, traffic to a deployment via <a href="/connecting/#connect-string">your deployment’s published connection URI</a> using a DNS address (e.g. ds012345-a0.mlab.com) is routed via the deployment’s private IP address. However, this mode still allows you to access the deployment via its public IP address using a single-node (non replica set) connection (see <a href="#q-how-do-i-connect-to-my-deployment-from-home-andor-office">FAQ below on how to connect from your home and/or office)</a>.</p>
+
+<p>Before changing to this mode from Public mode, ensure that you have tested private IP address from your VPC (see instructions above).</p>
+
+<h4 class="no_toc" id="private-mode">Private mode</h4>
+
+<p>In the Private network access mode, traffic to a deployment via the <a href="/connecting/#connect-string">connection URI</a> using a DNS address, e.g. ds012345-a0.mlab.com, is routed via the deployment’s private IP address. This mode does not allow access to the deployment via its public IP address.</p>
+
+<div class="warning-box warning-box">
+  <p>It is common for software components to cache the IP result of DNS name resolutions. If the public IP is cached when you either disallow inbound access from the public internet and/or move to Private mode, your application may encounter errors.</p>
+
+  <p>To flush such caches you should restart all processes connecting to your deployment. Doing so will ensure that by the time you transition from Private (Dual Access) mode to Private mode, all of the clients connecting to your deployment are routed using private IPs.</p>
+</div>
+
+<h3 id="move-out-of-public-access-mode">Steps to move out of “Public” network access mode</h3>
+
+<p>When a deployment is provisioned in a Private Environment, it can be configured to be in “Public” network access mode.  When you are ready to move it to one of the private mode (i.e. “Private (Dual Access)” or “Private”) and allow communication between your application and the deployemnt to happen via VPC Peering, there are a few required setups to follow.  The setup steps are:</p>
+
+<ol>
+  <li>Verify that your application is running within a VPC (i.e. on a EC2-VPC instance type) and is in the same region as your deployment.</li>
+  <li><a href="#peering">Create a new peering connection</a> between your application’s VPC and your deployment’s Private Environment/VPC.</li>
+  <li>Log into your AWS account to accept the peering connection request.</li>
+  <li><a href="#updating-route-tables">Add the peering connection to the route table(s)</a> that your application(s) use.</li>
+  <li>Set up <a href="#firewall-rules">inbound allow rule(s)</a> to allow private network traffic from your application’s VPC to your deployment.</li>
+  <li>Test that you are able to access the deployment from within your peered VPC using the deployment’s “-internal” addresses. See section <a href="#public-mode">“Test Private IP access from your VPC before leaving Public mode”</a>.</li>
+  <li>Once the test in Step #6 passes, <a href="#network-access-modes">change the network access mode</a> from Public to Private (Dual Access).</li>
+</ol>
+
+<p>Once you are in “Private (Dual Access)” mode, you may move into “Private” network access mode which will disable all access to the deployment via its public IP address.</p>
+
+<p>If you run into any issues, the following section on how to troubleshoot peering connection issues may help. Contact us anytime at <a href="mailto:support@mlab.com">support@mlab.com</a> for additional assistance.</p>
+
+<h2 id="troubleshooting-peering-connections">Troubleshooting peering connection issues</h2>
+
+<p>If you are having trouble connecting to your database in a Private Environment via a peering connection, please review the following troubleshooting steps.</p>
+
+<h4 class="no_toc" id="temporarily-return-to-public-mode-if-you-started-having-trouble-only-after-switching-to-a-private-mode">Temporarily return to Public mode if you started having trouble only after switching to a Private mode</h4>
+
+<p>If your application was able to connect while your deployment was in Public mode but unable to in one of the Private modes, we highly recommend switching back to Public mode temporarily.</p>
+
+<p>Once you’re in Public mode again, be sure to review the “Test Private IP access from your VPC before leaving Public mode” section of the <a href="#public-mode">Public mode</a> documentation above before trying to switch to  Private (Dual Access) mode.</p>
+
+<h4 class="no_toc" id="ensure-the-peering-connection-is-active">Ensure the peering connection is “active”</h4>
+
+<p>Verify that the peering connection between your VPC and the Private Environment’s VPC for your deployment is “active.”  To do this:</p>
+
+<ol>
+  <li>Navigate to the Peerings tab for your Private Environment.</li>
+  <li>Make sure the status for your peering connection is “active”.
+    <ul>
+      <li>If the status is not “active”, please review Step 7 from the <a href="#peering">Peering a Private Environment</a> section above to accept the request to peer connection with mLab.</li>
+    </ul>
+  </li>
+</ol>
+
+<h4 class="no_toc" id="ensure-the-peering-connection-has-been-added-to-the-route-table-used-by-your-application">Ensure the peering connection has been added to the route table used by your application</h4>
+
+<p>Verify that you have added the peering connection (pcx-xxxxx) to the route table used by your application. See Step 9 from section <a href="#create-private-environment">Peering a Private Environment</a> above.</p>
+
+<h4 class="no_toc" id="ensure-that-you-added-your-applications-vpc-to-your-firewall-whitelist">Ensure that you added your application’s VPC to your firewall whitelist</h4>
+
+<p>Make sure that you have set up <a href="#firewall-rules">inbound allow rule(s)</a> to allow private network trafffic from your VPC to your deployment.</p>
+
+<p>If you are still having trouble connecting, and you whitelisted an IP address range to your application’s VPC, verify the private IP address of the machine you’re connecting from by running the following command on the machine you are trying to connect from.</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% curl http://169.254.169.254/latest/meta-data/local-ipv4
+</code></pre></div></div>
+
+<p>This private IP address should be within an IP address range defined in your deployment’s <a href="#firewall-rules">inbound allow rules</a>.</p>
+
+<p>Also, ensure that your database and application are in the same AWS region. Confirm the region of the machine that you’re trying to connect from by running:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>% curl http://169.254.169.254/latest/meta-data/placement/availability-zone
+</code></pre></div></div>
+
+<p>If you are still having trouble connecting, and you whitelisted a Security Group in your application’s VPC, verify that the machine you’re connecting from really is part of the Security Group that you whitelisted.</p>
+
+<h3 class="no_toc" id="still-having-problems">Still having problems?</h3>
+
+<p>If you’re still having problems connecting, contact us at <a href="mailto:support@mlab.com">support@mlab.com</a> and be sure to include your deployment’s identifier as well as relevant details (output, error messages, etc.) from the troubleshooting steps above.</p>
+
+<h2 id="faq">Frequently Asked Questions (FAQ)</h2>
+
+<h3 class="no_toc" id="q-can-my-database-run-in-a-private-environment-but-still-be-publicly-accessible-ie-without-vpc-peering">Q. Can my database run in a Private Environment but still be publicly accessible (i.e., without VPC Peering)?</h3>
+
+<p>Yes. To do so, place your deployment in <a href="#public-mode">Public network access mode</a>. Be sure to also configure your database’s firewall rules on the “Networking” tab to allow in traffic from the public internet.</p>
+
+<h3 class="no_toc" id="q-do-you-charge-for-vpc-peering-via-your-private-environments-feature">Q. Do you charge for VPC peering via your Private Environments feature?</h3>
+
+<p>We do not charge extra for our Private Environments feature. In other words, if you choose to peer your VPC with your mLab deployment’s VPC, there is no additional charge.</p>
+
+<h3 id="updating-route-tables" class="no_toc">Q. How do I add my peering connection to my route table(s)?</h3>
+
+<p>For more information, read <a href="https://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_Route_Tables.html#AddRemoveRoutes">AWS’s documentation on configuring Route Tables</a>.</p>
+
+<p>The “Destination” for the route in AWS’s route table should be the Private Environment’s IP address range.  You can find this value in the “IP address range” field in the upper left area of your Private Environment page in mLab’s mangagement portal (e.g., “172.21.0.0/16”).</p>
+
+<p>The “Target” for the route in AWS’s route table should be the AWS peering connection ID. You can find this value under the “PEERING CONNECTION” column, in the “Peerings” tab after navigating to your Private Environment page in mLab’s management portal (e.g., “pcx-a1b23456”).</p>
+
+<h3 class="no_toc" id="q--why-cant-i-configure-inbound-allow-rules-from-different-vpcs-with-overlapping-ip-address-ranges">Q.  Why can’t I configure inbound allow rules from different VPCs with overlapping IP address ranges?</h3>
+
+<p>Routers route data based on IP address only; they do not have the context of a target VPC. Therefore, if you were to peer VPCs with overlapping IP addresses, the routing rules from the deployment’s perspective would be ambiguous.</p>
+
+<p>As such, you need to configure your peered VPC(s) to avoid overlapping IP address spaces.</p>
+
+<h3 class="no_toc" id="q-how-do-i-connect-to-my-deployment-from-home-andor-office">Q. How do I connect to my deployment from home and/or office?</h3>
+
+<p>If you need to access your deployment from outside of your peered VPC(s), your deployment must be in either Public or Private (Dual Access) mode; it cannot be in Private mode.</p>
+
+<p>If you’re in the Private (Dual Access) mode you will need to connect using one of the “-external” addresses that we have made available.</p>
+
+<p>For example, let’s say you absolutely need to connect from your office with IP address 199.116.71.90 but you still want your app to exlusively use private routing. You would then:</p>
+
+<ol>
+  <li>Ensure that your deployment is in Private (Dual Access) mode.</li>
+  <li>Add 199.116.71.90/32 as an inbound allow rule.</li>
+  <li>
+    <p>Connect from your office using the <code class="highlighter-rouge">mongo</code> shell to one of the nodes in your deployment using an “-external” address. If the address in your connection string is “ds012345-a0.mlab.com:12345”, you would append “-external” to the string left of the first period and connect using that “-external” addresss.</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>  % mongo ds012345-a0-external.mlab.com:12345
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<div class="note-box note-box">
+  <p>You will not be able to make a replica set connection to your deployment, only a single-node connection. If you are having trouble connecting using a single-node connection, make sure that your connection string does <em>not</em> include the <code class="highlighter-rouge">replicaSet</code> parameter.</p>
+</div>
+
+<h3 class="no_toc" id="q-will-connecting-via-a-peering-connection-reduce-latency-or-reduce-data-transfer-costs">Q. Will connecting via a peering connection reduce latency or reduce data transfer costs?</h3>
+
+<p>No. In general, connecting via a peering connection strengthens security but it does not reduce latency or reduce costs. More details:</p>
+
+<ul>
+  <li>
+    <p>If your application is already connecting from within the same AWS region as your mLab deployment via the public internet, connecting via a peering connection should not reduce latency between your application and the deployment.</p>
+  </li>
+  <li>
+    <p>AWS charges the same amount for data transfer regardless of whether you’re connecting to public IP addresses or to private IP addresses (via peering connection to peered VPC).</p>
+  </li>
+</ul>
+
+<p>The following excerpts taken from the “Data Transfer” section of <a href="https://aws.amazon.com/ec2/pricing/on-demand/">Amazon’s EC2 Pricing</a> page are applicable.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Data Transfer</th>
+      <th>Pricing<sup id="fnref:foot-text"><a href="#fn:foot-text" class="footnote">1</a></sup></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Data transferred “in” to and “out” from Amazon EC2… across Availability Zones or VPC Peering connections in the same AWS Region</td>
+      <td>$0.01 per GB</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>IPv4: Data transferred “in” to and “out” from public or Elastic IPv4 address</td>
+      <td>$0.01 per GB</td>
+    </tr>
+  </tbody>
+  <tbody>
+    <tr>
+      <td>Data transferred between Amazon EC2… in the same Availability Zone is free. See above when transferring data using VPC peering</td>
+      <td>free</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="note-box note-box">
+  <p>Data transfer costs are included with every mLab plan.  In other words, mLab does not charge extra for the data transfer costs that mLab incurs in mLab’s AWS account.</p>
+</div>
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:foot-text">
+      <p>EC2 prices on July 2018 for US East (N. Virginia) <a href="#fnref:foot-text" class="reversefootnote">&#8617;</a></p>
+    </li>
+  </ol>
+</div>
+</div>
+      <div class="page-overlay" js-page-overlay>
+        <div class="page-overlay--close"></div>
+      </div>
+    </div>
+    <div class="clearer"></div>
+    <div id="footer">
+      <div>
+        &#169; Copyright 2018 by ObjectLabs Corporation. All Rights Reserved.
+      </div>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-307557-10', 'auto');
+          ga('require', 'displayfeatures');
+          ga('require', 'linkid', 'linkid.js');
+          ga('send', 'pageview');
+        </script>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+      anchors.options = {
+        placement: 'left'
+      };
+      anchors.add('h2, h3, h4, h5');
+    </script>
+  </body>
+</html>
