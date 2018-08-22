@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch-norobots
+layout: default-norobots
 title: This page has moved!
 permalink: /restapi/
 description: Documentation for the mLab REST API

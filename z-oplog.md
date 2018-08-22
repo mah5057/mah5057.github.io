@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Accessing the MongoDB oplog 
 permalink: /oplog/
 description: Oplog tailing by accessing the local database

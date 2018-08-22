@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Running MongoDB in Production
 permalink: /production-guide/
 description: Guide to running MongoDB in production

@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Backup and Recovery
 permalink: /backups/
 description: Create an mLab backup using mLab's backup system to archive and restore a MongoDB database when you lose data or need a copy

@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Migrating from Parse
 permalink: /migrating-from-parse/
 description: A guide to migrating from Parse to mLab

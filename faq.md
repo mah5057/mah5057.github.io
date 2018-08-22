@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Frequently Asked Questions (FAQ)
 permalink: /faq/
 description: Frequently Asked Questions (FAQ) for your mLab database

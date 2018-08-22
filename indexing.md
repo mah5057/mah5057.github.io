@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Indexing and Performance
 permalink: /indexing/
 description: Improve performance of your mLab database by creating indexes. Examine slow queries with mLab's performance monitoring tools.

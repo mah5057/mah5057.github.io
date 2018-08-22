@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title:  MongoDB Storage Statistics (MMAPv1)
 permalink: /storage-statistics/
 description: Accessing and understanding the output of MongoDB's dbStats and collStats commands for your mLab database and collections running with MMAPv1

@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Securing your AWS S3 bucket
 permalink: /secure-S3-bucket/
 description: How to secure your AWS S3 bucket to store your mLab backups

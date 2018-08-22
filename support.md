@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Support
 permalink: /support/
 description: The mLab support documentation, help desk, and status page provide assistance for your mLab database. The MongoDB community is also helpful.
