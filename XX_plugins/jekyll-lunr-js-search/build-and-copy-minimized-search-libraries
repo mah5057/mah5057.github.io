@@ -1,0 +1,20 @@
+#!/bin/zsh
+
+assertCommandExists() {
+  which $1 > /dev/null 2>&1
+  CMD_NOT_FOUND=$?
+  if [[ $CMD_NOT_FOUND -ne 0 ]]; then
+    echo FAILURE: Could not find $1 command on the PATH
+    exit $CMD_NOT_FOUND
+  fi
+}
+
+assertCommandExists bower
+
+bundle install
+
+rake build
+
+cp build/*.min.js ../../js
+
+echo "Search plugin changes built and copied!"
