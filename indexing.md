@@ -92,6 +92,7 @@ minc-docversion: v3.4
 ### The importance of proper indexing {#importance-of-indexing}
 {:.no_toc}
 
+Let's try an edit
 Indexes in MongoDB are B-tree data structures that dramatically reduce the resource (i.e., RAM, CPU, and I/O) requirements of querying. Proper indexing is critical; even a single unindexed query is enough to cause significant performance degradation.
 
 When a query is not indexed, MongoDB performs a full collection scan, iterating through every single document in the collection to find results. In contrast, an indexed query performs and scales much better because it inspects far fewer documents.
