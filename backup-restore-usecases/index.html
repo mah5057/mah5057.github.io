@@ -1,0 +1,715 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="Description" content="Supported use cases for restoring mLab-created backups from/to various plan subscriptions">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Supported backup restore use cases | mLab Documentation & Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- favicon -->
+    <link href="https://mlab.com/base/img/favicon.ico?v=2" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pygment_trac.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="/css/webfonts/MyFontsWebfontsKit.css" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
+    <!-- Eliminate 300ms delay between a tap and the firing of the click event
+    on mobile browsers. -->
+    <script src="/javascripts/fastclick.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // Style the warning/note boxes
+        $(".critical-box").prepend('<div class="title"></div>');
+        $(".warning-box").prepend('<div class="title"></div>');
+        $(".note-box").prepend('<div class="title"></div>');
+        $(".announcement-box").prepend('<div class="title"></div>');
+
+        // Have all external links go to new tab
+        $("a[href^='http']").attr("target", "_blank");
+
+
+        // Give active left nav item the "active" class
+        var article = location.pathname;
+        article = article.substring(0, article.length - 1);
+        if (article.length > 0) {
+          $("#sidenav li a[href^='"+article+"']").parent().addClass("active");
+        } else {
+          $("#sidenav li a[href='/']").parent().addClass("active");
+        }
+
+        // Instantiate FastClick
+        FastClick.attach(document.body);
+
+        // Hack to improve buggy scroll container behavior on iOS Safari
+        // On doc.ready, set the scroll position to 1px
+        $("#sidenav").scrollTop(1);
+
+        // Make sure side nav never hit's the top or bottom by
+        // Making it offset from either by 1px
+        $("#sidenav").scroll(function () {
+          if ($(this).scrollTop() + $(this).innerHeight() == $(this)[0].scrollHeight) {
+            $(this).scrollTop($(this).scrollTop() - 1);
+
+          } else if ($(this).scrollTop() == 0) {
+            $(this).scrollTop(1);
+          }
+        });
+
+        $("[js-side-nav-toggle]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").on("touchmove", function (e) {
+          e.preventDefault();
+        });
+      });
+
+      function handleSidebarToggle () {
+        $("body").toggleClass("sidebar-open");
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
+  </head>
+  <body>
+      
+<script id="search-results-template" type="text/mustache">
+    <ul class="search-results-ul">
+    {{#entries}}
+    <li class="search-li">
+      <u><a href="{{url}}">{{title}}</a></u>
+      <p>{{#excerpt}}{{{.}}}{{/excerpt}}</p>
+    </li>
+    {{/entries}}
+    </ul>
+</script>
+
+<script type="text/javascript">
+  $(function() {
+    $('#search-query').lunrSearch({
+      indexUrl  : '/js/index.json',           // url for the .json file containing search index data
+      results   : '#search-results',          // selector for containing search results element
+      template  : '#search-results-template', // selector for Mustache.js template
+      titleMsg  : null,   // message attached in front of results (can be empty)
+      emptyMsg  : '<p>No results.</p>',     // shown message if search returns no results
+      overlayDiv : '#active-search-overlay', // selector for div to grey out rest of page
+      searchForm : '#search-query', // selector for the input box
+      searchDiv : '#searchDiv'
+    });
+  });
+</script>
+    <div id="active-search-overlay" class="activeSearchOverlay" style="display: none;"></div>
+    <div class="header">
+      <div class="header--side-nav-toggle" js-side-nav-toggle>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+      </div>
+      <a href="/" class="logo">
+        <img src="/css/img/mLab-logo-dark.svg" class="logo--image" />
+        <div class="logo--text">Docs + Support</div>
+      </a>
+      <div class="header--links">
+        <a href="https://mlab.com">mLab Home</a>
+        <a href="https://support.mlab.com">My Support Requests</a>
+        <a title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>" class="emailSupport">Email support@mlab.com</a>
+        <!--<a href="mailto:mLab Support<support@mlab.com>?body=Deployment Identifier (if applicable):%0D%0AmLab Account Name (if applicable):%0D%0A%0D%0A" class="emailSupport">Email support@mlab.com</a>-->
+      </div>
+    </div>
+    <div id="main" class="main">
+       <div class="search-form" id="searchDiv">
+         <span class="icon"><i class="fa fa-search"></i></span>
+           <form class="search-box" action="/search" method="get">
+             <input type="text" id="search-query" name="q" placeholder="Search" autocomplete="off">
+           </form>
+           <div id="search-results" class="searchResults" style="display: none;"></div>
+       </div>
+      <div id="sidenav" class="side-nav">
+        <ul>
+          <li><a href="/">Quick-Start Guide</a></li>
+          <li><a href="/accounts">mLab Account Setup</a></li>
+          <li><a href="/plans">Plans and Data Centers</a></li>
+          <li><a href="/private-environments">Private Environments</a></li>
+          <li><a href="/subscriptions">Database Subscriptions</a></li>
+          <li><a href="/connecting">Connecting</a></li>
+          <li><a href="/migrating">Migrating Data into mLab</a></li>
+          <li><a href="/languages">Language Center</a></li>
+          <li><a href="/monitoring">Monitoring and Alerts</a></li>
+          <li><a href="/indexing">Indexing and Performance</a></li>
+          <li><a href="/backups">Backup and Recovery</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/ops">Managing Your MongoDB Deployment</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href="/faq">Frequently Asked Questions (FAQ)</a></li>
+          
+          <li>
+            <a href="/unpublished/blankfile/">-------------------</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/markdown/">MARKDOWN SYNTAX</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/portal/">WRITING STYLE and TERMS</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/template/">TEMPLATE FOR NEW FILES</a>
+          </li>
+          
+        </ul>
+        <div class="side-nav--support-links">
+          <a class="side-nav--support-link" href="https://mlab.com">mLab Home</a>
+          <a class="side-nav--support-link" href="https://support.mlab.com">My Support Requests</a>
+          <a class="side-nav--support-link emailSupport" title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>">Email support@mlab.com</a>
+        </div>
+      </div>
+      <div id="content" class="content-section">
+          <div id="contentdisplay" class="content-display">
+          
+<h1 class="no_toc" id="supported-backup-restore-use-cases">Supported backup restore use cases</h1>
+
+
+<h2 class="no_toc" id="overview">Overview</h2>
+
+<p>Below are the supported use cases for various mLab-created backup restore scenarios.</p>
+
+<h3 class="no_toc" id="backups-taken-using-mongodump">Backups taken using mongodump</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>Restore method</th>
+      <th>Source plan</th>
+      <th>Sandbox</th>
+      <th>Shared Cluster</th>
+      <th>Dedicated Cluster</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Create new</td>
+      <td>Sandbox</td>
+      <td>yes</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Create new</td>
+      <td>Shared Cluster</td>
+      <td>yes (w/out opLogReplay)</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Create new</td>
+      <td>Dedicated Cluster w/ 1 database</td>
+      <td>yes (w/out opLogReplay)</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Create new</td>
+      <td>Dedicated Cluster w/ &gt; 1 database</td>
+      <td>yes  (1 database)</td>
+      <td>yes (1 database)</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>Create new</td>
+      <td>Dedicated Cluster w/ &gt; 1 database</td>
+      <td>no  (all databases)</td>
+      <td>no (all databases)</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<table>
+  <thead>
+    <tr>
+      <th>Restore method</th>
+      <th>Source plan</th>
+      <th>Sandbox</th>
+      <th>Shared Cluster</th>
+      <th>Dedicated Cluster</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>In-place restore</td>
+      <td>Sandbox</td>
+      <td>n/a</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>In-place restore</td>
+      <td>Shared Cluster</td>
+      <td>n/a</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>In-place restore</td>
+      <td>Dedicated Cluster w/ 1 database</td>
+      <td>n/a</td>
+      <td>yes</td>
+      <td>yes</td>
+    </tr>
+    <tr>
+      <td>In-place restore</td>
+      <td>Dedicated Cluster w/ &gt; 1 database</td>
+      <td>n/a</td>
+      <td>no</td>
+      <td>yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 class="no_toc" id="backups-taken-as-block-storage-snapshots">Backups taken as block storage snapshots</h3>
+
+<p>Since backups taken as block storage snapshots are snapshots of the entire underlying disk volume, it is <a href="http://0.0.0.0:4000/backups/#faq-ebs-snapshot-restore">necessary they are restored into a deployment with at least the same disk volume as the backup.</a></p>
+
+<p>The below use cases applies for both <a href="http://0.0.0.0:4000/backups/#in-place-restore">in-place restore</a> and <a href="http://0.0.0.0:4000/backups/#create-new-from-backup">creating a new</a> deployment from an mLab-created backup.</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>Source_plan</th>
+      <th>Sandbox</th>
+      <th>Shared</th>
+      <th>M1<sup id="fnref:foot-mlab-Standard"><a href="#fn:foot-mlab-Standard" class="footnote">1</a></sup></th>
+      <th>M2<sup id="fnref:foot-mlab-Standard:1"><a href="#fn:foot-mlab-Standard" class="footnote">1</a></sup></th>
+      <th>M3<sup id="fnref:foot-mlab-Standard:2"><a href="#fn:foot-mlab-Standard" class="footnote">1</a></sup></th>
+      <th>M4<sup id="fnref:foot-mlab-Standard:3"><a href="#fn:foot-mlab-Standard" class="footnote">1</a></sup></th>
+      <th>M5<sup id="fnref:foot-mlab-Standard:4"><a href="#fn:foot-mlab-Standard" class="footnote">1</a></sup></th>
+      <th>M6<sup id="fnref:foot-mlab-Standard:5"><a href="#fn:foot-mlab-Standard" class="footnote">1</a></sup></th>
+      <th>M1_HS<sup id="fnref:foot-mlab-HS"><a href="#fn:foot-mlab-HS" class="footnote">2</a></sup></th>
+      <th>M2_HS<sup id="fnref:foot-mlab-HS:1"><a href="#fn:foot-mlab-HS" class="footnote">2</a></sup></th>
+      <th>M3_HS<sup id="fnref:foot-mlab-HS:2"><a href="#fn:foot-mlab-HS" class="footnote">2</a></sup></th>
+      <th>M4_HS<sup id="fnref:foot-mlab-HS:3"><a href="#fn:foot-mlab-HS" class="footnote">2</a></sup></th>
+      <th>M5_HS<sup id="fnref:foot-mlab-HS:4"><a href="#fn:foot-mlab-HS" class="footnote">2</a></sup></th>
+      <th>M6_HS<sup id="fnref:foot-mlab-HS:5"><a href="#fn:foot-mlab-HS" class="footnote">2</a></sup></th>
+      <th>M3_HP<sup id="fnref:foot-mlab-HP"><a href="#fn:foot-mlab-HP" class="footnote">3</a></sup></th>
+      <th>M4_HP<sup id="fnref:foot-mlab-HP:1"><a href="#fn:foot-mlab-HP" class="footnote">3</a></sup></th>
+      <th>M5_HP<sup id="fnref:foot-mlab-HP:2"><a href="#fn:foot-mlab-HP" class="footnote">3</a></sup></th>
+      <th>M6_HP<sup id="fnref:foot-mlab-HP:3"><a href="#fn:foot-mlab-HP" class="footnote">3</a></sup></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>M1 Standard</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M2 Standard</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>TBD <sup id="fnref:foot-mlab-RAM"><a href="#fn:foot-mlab-RAM" class="footnote">4</a></sup></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M3 Standard</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>TBD <sup id="fnref:foot-mlab-RAM:1"><a href="#fn:foot-mlab-RAM" class="footnote">4</a></sup></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M4 Standard</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>TBD <sup id="fnref:foot-mlab-RAM:2"><a href="#fn:foot-mlab-RAM" class="footnote">4</a></sup></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M5 Standard</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>TBD <sup id="fnref:foot-mlab-RAM:3"><a href="#fn:foot-mlab-RAM" class="footnote">4</a></sup></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M6 Standard</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>TBD <sup id="fnref:foot-mlab-RAM:4"><a href="#fn:foot-mlab-RAM" class="footnote">4</a></sup></td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>M1 High Storage</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M2 High Storage</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M3 High Storage</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M4 High Storage</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M5 High Storage</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>M6 High Storage</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+    </tr>
+    <tr>
+      <td>M3 High Performance</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M4 High Performance</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>TBD<sup id="fnref:foot-mlab-SSD"><a href="#fn:foot-mlab-SSD" class="footnote">5</a></sup></td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M5 High Performance</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>TBD<sup id="fnref:foot-mlab-SSD:1"><a href="#fn:foot-mlab-SSD" class="footnote">5</a></sup></td>
+      <td>TBD<sup id="fnref:foot-mlab-SSD:2"><a href="#fn:foot-mlab-SSD" class="footnote">5</a></sup></td>
+      <td>Yes</td>
+      <td>Yes</td>
+    </tr>
+    <tr>
+      <td>M6_High_Performance</td>
+      <td>n/a</td>
+      <td>n/a</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>No</td>
+      <td>Yes</td>
+      <td>Yes</td>
+      <td>TBD<sup id="fnref:foot-mlab-SSD:3"><a href="#fn:foot-mlab-SSD" class="footnote">5</a></sup></td>
+      <td>TBD<sup id="fnref:foot-mlab-SSD:4"><a href="#fn:foot-mlab-SSD" class="footnote">5</a></sup></td>
+      <td>TBD<sup id="fnref:foot-mlab-SSD:5"><a href="#fn:foot-mlab-SSD" class="footnote">5</a></sup></td>
+      <td>Yes</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>In the case of “TBD”, please send a request to <a href="mailto:support@mlab.com">support@mlab.com</a> for further assistance.</p>
+
+<hr />
+
+<div class="footnotes">
+  <ol>
+    <li id="fn:foot-mlab-Standard">
+      <p>Refers to “Standard Dedicated Cluster” <a href="#fnref:foot-mlab-Standard" class="reversefootnote">&#8617;</a> <a href="#fnref:foot-mlab-Standard:1" class="reversefootnote">&#8617;<sup>2</sup></a> <a href="#fnref:foot-mlab-Standard:2" class="reversefootnote">&#8617;<sup>3</sup></a> <a href="#fnref:foot-mlab-Standard:3" class="reversefootnote">&#8617;<sup>4</sup></a> <a href="#fnref:foot-mlab-Standard:4" class="reversefootnote">&#8617;<sup>5</sup></a> <a href="#fnref:foot-mlab-Standard:5" class="reversefootnote">&#8617;<sup>6</sup></a></p>
+    </li>
+    <li id="fn:foot-mlab-HS">
+      <p>Refers to “High Storage Dedicated Cluster” <a href="#fnref:foot-mlab-HS" class="reversefootnote">&#8617;</a> <a href="#fnref:foot-mlab-HS:1" class="reversefootnote">&#8617;<sup>2</sup></a> <a href="#fnref:foot-mlab-HS:2" class="reversefootnote">&#8617;<sup>3</sup></a> <a href="#fnref:foot-mlab-HS:3" class="reversefootnote">&#8617;<sup>4</sup></a> <a href="#fnref:foot-mlab-HS:4" class="reversefootnote">&#8617;<sup>5</sup></a> <a href="#fnref:foot-mlab-HS:5" class="reversefootnote">&#8617;<sup>6</sup></a></p>
+    </li>
+    <li id="fn:foot-mlab-HP">
+      <p>Refers to “High Performance Dedicated Cluster” <a href="#fnref:foot-mlab-HP" class="reversefootnote">&#8617;</a> <a href="#fnref:foot-mlab-HP:1" class="reversefootnote">&#8617;<sup>2</sup></a> <a href="#fnref:foot-mlab-HP:2" class="reversefootnote">&#8617;<sup>3</sup></a> <a href="#fnref:foot-mlab-HP:3" class="reversefootnote">&#8617;<sup>4</sup></a></p>
+    </li>
+    <li id="fn:foot-mlab-RAM">
+      <p>Further investigation will be necessary to ensure appropriate amount of RAM is allocated. <a href="#fnref:foot-mlab-RAM" class="reversefootnote">&#8617;</a> <a href="#fnref:foot-mlab-RAM:1" class="reversefootnote">&#8617;<sup>2</sup></a> <a href="#fnref:foot-mlab-RAM:2" class="reversefootnote">&#8617;<sup>3</sup></a> <a href="#fnref:foot-mlab-RAM:3" class="reversefootnote">&#8617;<sup>4</sup></a> <a href="#fnref:foot-mlab-RAM:4" class="reversefootnote">&#8617;<sup>5</sup></a></p>
+    </li>
+    <li id="fn:foot-mlab-SSD">
+      <p>Further investigation will be necessary to ensure appropriate amount of in-chassis/local disk volume is allocated. <a href="#fnref:foot-mlab-SSD" class="reversefootnote">&#8617;</a> <a href="#fnref:foot-mlab-SSD:1" class="reversefootnote">&#8617;<sup>2</sup></a> <a href="#fnref:foot-mlab-SSD:2" class="reversefootnote">&#8617;<sup>3</sup></a> <a href="#fnref:foot-mlab-SSD:3" class="reversefootnote">&#8617;<sup>4</sup></a> <a href="#fnref:foot-mlab-SSD:4" class="reversefootnote">&#8617;<sup>5</sup></a> <a href="#fnref:foot-mlab-SSD:5" class="reversefootnote">&#8617;<sup>6</sup></a></p>
+    </li>
+  </ol>
+</div>
+
+          </div>
+      </div>
+      <div class="page-overlay" js-page-overlay>
+        <div class="page-overlay--close"></div>
+      </div>
+    </div>
+    <div class="clearer"></div>
+    <div id="footer">
+      <div>
+        &#169; Copyright 2018 by ObjectLabs Corporation. All Rights Reserved.
+      </div>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-307557-10', 'auto');
+          ga('require', 'displayfeatures');
+          ga('require', 'linkid', 'linkid.js');
+          ga('send', 'pageview');
+        </script>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+      anchors.options = {
+        placement: 'left'
+      };
+      anchors.add('h2, h3, h4, h5');
+    </script>
+    <script src="/js/search.min.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>

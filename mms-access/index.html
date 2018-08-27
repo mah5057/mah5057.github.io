@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="robots" content="noindex, nofollow, noarchive"/>
+    <meta name="Description" content="How to access MMS Monitoring for your mLab deployment">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>How to access MMS Monitoring | mLab Documentation & Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- favicon -->
+    <link href="https://mlab.com/base/img/favicon.ico?v=2" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pygment_trac.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="/css/webfonts/MyFontsWebfontsKit.css" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <!-- Eliminate 300ms delay between a tap and the firing of the click event
+    on mobile browsers. -->
+    <script src="/javascripts/fastclick.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // Style the warning/note boxes
+        $(".critical-box").prepend('<div class="title"></div>');
+        $(".warning-box").prepend('<div class="title"></div>');
+        $(".note-box").prepend('<div class="title"></div>');
+        $(".announcement-box").prepend('<div class="title"></div>');
+
+        // Have all external links go to new tab
+        $("a[href^='http']").attr("target", "_blank");
+
+
+        // Give active left nav item the "active" class
+        var article = location.pathname;
+        article = article.substring(0, article.length - 1);
+        if (article.length > 0) {
+          $("#sidenav li a[href^='"+article+"']").parent().addClass("active");
+        } else {
+          $("#sidenav li a[href='/']").parent().addClass("active");
+        }
+
+        // Instantiate FastClick
+        FastClick.attach(document.body);
+
+        // Hack to improve buggy scroll container behavior on iOS Safari
+        // On doc.ready, set the scroll position to 1px
+        $("#sidenav").scrollTop(1);
+
+        // Make sure side nav never hit's the top or bottom by
+        // Making it offset from either by 1px
+        $("#sidenav").scroll(function () {
+          if ($(this).scrollTop() + $(this).innerHeight() == $(this)[0].scrollHeight) {
+            $(this).scrollTop($(this).scrollTop() - 1);
+
+          } else if ($(this).scrollTop() == 0) {
+            $(this).scrollTop(1);
+          }
+        });
+
+        $("[js-side-nav-toggle]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").on("touchmove", function (e) {
+          e.preventDefault();
+        });
+      });
+
+      function handleSidebarToggle () {
+        $("body").toggleClass("sidebar-open");
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
+  </head>
+  <body>
+      
+<script id="search-results-template" type="text/mustache">
+    <ul class="search-results-ul">
+    {{#entries}}
+    <li class="search-li">
+      <u><a href="{{url}}">{{title}}</a></u>
+      <p>{{#description}}{{.}}{{/description}}</p>
+    </li>
+    {{/entries}}
+    </ul>
+</script>
+
+	<script type="text/javascript">
+  $(function() {
+    $('#search-query').lunrSearch({
+      indexUrl  : '/js/index.json',           // url for the .json file containing search index data
+      results   : '#search-results',          // selector for containing search results element
+      template  : '#search-results-template', // selector for Mustache.js template
+      titleMsg  : null,   // message attached in front of results (can be empty)
+      emptyMsg  : '<p>No results.</p>',     // shown message if search returns no results
+      overlayDiv : '#active-search-overlay', // selector for div to grey out rest of page
+      searchForm : '#search-query', // selector for the input box
+      searchDiv : '#searchDiv'
+    });
+  });
+</script>
+	<div id="active-search-overlay" class="activeSearchOverlay" style="display: none;"></div>
+    <div class="header">
+      <div class="header--side-nav-toggle" js-side-nav-toggle>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+      </div>
+      <a href="/" class="logo">
+        <img src="/css/img/mLab-logo-dark.svg" class="logo--image" />
+        <div class="logo--text">Docs + Support</div>
+      </a>
+      <div class="header--links">
+        <a href="https://mlab.com">mLab Home</a>
+        <a href="https://support.mlab.com">My Support Requests</a>
+        <a title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>" class="emailSupport">Email support@mlab.com</a>
+        <!--<a href="mailto:mLab Support<support@mlab.com>?body=Deployment Identifier (if applicable):%0D%0AmLab Account Name (if applicable):%0D%0A%0D%0A" class="emailSupport">Email support@mlab.com</a>-->
+      </div>
+    </div>
+    <div id="main" class="main">
+	   <div class="search-form" id="searchDiv">
+         <span class="icon"><i class="fa fa-search"></i></span>
+           <form class="search-box" action="/search" method="get">
+             <input type="text" id="search-query" name="q" placeholder="Search" autocomplete="off">
+           </form>
+           <div id="search-results" class="searchResults" style="display: none;"></div>
+       </div>
+      <div id="sidenav" class="side-nav">
+        <ul>
+          <li><a href="/">Quick-Start Guide</a></li>
+          <li><a href="/accounts">mLab Account Setup</a></li>
+          <li><a href="/plans">Plans and Data Centers</a></li>
+          <li><a href="/private-environments">Private Environments</a></li>
+          <li><a href="/subscriptions">Database Subscriptions</a></li>
+          <li><a href="/connecting">Connecting</a></li>
+          <li><a href="/migrating">Migrating Data into mLab</a></li>
+          <li><a href="/languages">Language Center</a></li>
+          <li><a href="/monitoring">Monitoring and Alerts</a></li>
+          <li><a href="/indexing">Indexing and Performance</a></li>
+          <li><a href="/backups">Backup and Recovery</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/ops">Managing Your MongoDB Deployment</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href="/faq">Frequently Asked Questions (FAQ)</a></li>
+          
+          <li>
+            <a href="/unpublished/blankfile/">-------------------</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/markdown/">MARKDOWN SYNTAX</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/portal/">WRITING STYLE and TERMS</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/template/">TEMPLATE FOR NEW FILES</a>
+          </li>
+          
+        </ul>
+        <div class="side-nav--support-links">
+          <a class="side-nav--support-link" href="https://mlab.com">mLab Home</a>
+          <a class="side-nav--support-link" href="https://support.mlab.com">My Support Requests</a>
+          <a class="side-nav--support-link emailSupport" title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>">Email support@mlab.com</a>
+        </div>
+      </div>
+      <div id="content" class="content-section">
+<h1 class="no_toc" id="how-to-access-mms-monitoring">How to access MMS Monitoring</h1>
+
+<ul id="markdown-toc">
+  <li><a href="#steps-to-set-up-access-to-mms-monitoring" id="markdown-toc-steps-to-set-up-access-to-mms-monitoring">Steps to set up access to MMS Monitoring</a></li>
+  <li><a href="#managing-mms-users" id="markdown-toc-managing-mms-users">Managing MMS Users</a></li>
+  <li><a href="#mms-groups" id="markdown-toc-mms-groups">Choosing an MMS group</a></li>
+</ul>
+
+<h2 id="steps-to-set-up-access-to-mms-monitoring">Steps to set up access to MMS Monitoring</h2>
+
+<p><em>Not available for Sandbox databases and Shared single-node servers</em></p>
+
+<p>While mLab takes care of setting up the Monitoring Agent and MMS group for each of your eligible deployments, your responsibility is to attach one or more MMS users to your mLab account.  Each MMS user attached to your mLab account will be given access to MMS Monitoring for all eligible deployments, including any new deployments that you create down the line.</p>
+
+<p>To attach an MMS user to your mLab account:</p>
+
+<ol>
+  <li><a href="https://mms.mongodb.com/user/register">Register for an MMS account</a> if you do not already have one
+    <ul>
+      <li>In the MMS Group section, do NOT use an existing mLab-created MMS group; see <a href="#mms-groups">Choosing an MMS group</a> below for a detailed explanation</li>
+    </ul>
+  </li>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal</li>
+  <li>Click “Account” in the upper right-hand corner to open the Account Settings page</li>
+  <li>Click the “MMS Monitoring” tab</li>
+  <li>Click the “Attach MMS user” button</li>
+  <li>In the window that appears, fill in your MMS username and click “Attach”
+<img src="/assets/screenshot-mmsuser.png" alt="img-mmsuser" /></li>
+</ol>
+
+<p>An email will be sent to all group admins for each MMS group (one per deployment) that the MMS user has been added to.</p>
+
+<h2 id="managing-mms-users">Managing MMS Users</h2>
+
+<p>The benefit of attaching MMS users to your mLab account is that you have just one place that you need to go to for making sure that MMS users are added or removed from all of your eligible deployments. In other words, you do not need to log into the MongoDB MMS portal and navigate to the Users tab for each and every MMS group (if your group has more than one MMS-eligible deployments) to add or remove an MMS user.</p>
+
+<p>Also, while you are not prevented from using the Users tab in the MMS UI from MongoDB, Inc. to add or remove a user from an individual MMS group, doing so will NOT adjust the list of MMS users attached to your mLab account. mLab will continue to use the list of attached MMS users to determine who should be automatically added to any MMS-eligible deployments that are subsequently created.</p>
+
+<div class="warning-box warning-box">
+  <p>When a person should no longer have access to your mLab deployments (e,g, leaves organization, changes job responsibilities, etc.),  make sure that both the mLab user and MMS user entries associated with that person are deleted from the mLab account. Otherwise, the user will continue to have access to the account’s MongoDB and/or MMS Monitoring data.</p>
+</div>
+
+<h2 id="mms-groups">Choosing an MMS group</h2>
+
+<p>In MongoDB’s <a href="https://mms.mongodb.com/user/register">MMS registration page</a>, there is a section titled “MMS Group” where you are asked to select whether you are the first person in your organization to use MMS or if you’ll be joining an existing MMS group at your organization. You are also asked to provide the name of the MMS group that you’d like to create or be added to.</p>
+
+<p>It does not matter which option you choose, however, if you choose to join an existing MMS group, you cannot use any of the existing MMS groups created for your mLab account’s hosted deployments (these MMS groups have names that start with “mongolab_”).</p>
+</div>
+      <div class="page-overlay" js-page-overlay>
+        <div class="page-overlay--close"></div>
+      </div>
+    </div>
+    <div class="clearer"></div>
+    <div id="footer">
+      <div>
+        &#169; Copyright 2018 by ObjectLabs Corporation. All Rights Reserved.
+      </div>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-307557-10', 'auto');
+          ga('require', 'displayfeatures');
+          ga('require', 'linkid', 'linkid.js');
+          ga('send', 'pageview');
+        </script>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+      anchors.options = {
+        placement: 'left'
+      };
+      anchors.add('h2, h3, h4, h5');
+    </script>
+	<script src="/js/search.min.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>

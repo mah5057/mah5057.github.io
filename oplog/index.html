@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="Description" content="Oplog tailing by accessing the local database">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Accessing the MongoDB oplog | mLab Documentation & Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!-- favicon -->
+    <link href="https://mlab.com/base/img/favicon.ico?v=2" rel="shortcut icon" type="image/x-icon" />
+
+    <!-- syntax highlighting CSS -->
+    <link rel="stylesheet" href="/css/syntax.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/pygment_trac.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" type="text/css" href="/css/webfonts/MyFontsWebfontsKit.css" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
+    <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+    <!-- Javascript -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	
+    <!-- Eliminate 300ms delay between a tap and the firing of the click event
+    on mobile browsers. -->
+    <script src="/javascripts/fastclick.js"></script>
+    <script>
+      $(document).ready(function() {
+
+        // Style the warning/note boxes
+        $(".critical-box").prepend('<div class="title"></div>');
+        $(".warning-box").prepend('<div class="title"></div>');
+        $(".note-box").prepend('<div class="title"></div>');
+        $(".announcement-box").prepend('<div class="title"></div>');
+
+        // Have all external links go to new tab
+        $("a[href^='http']").attr("target", "_blank");
+
+
+        // Give active left nav item the "active" class
+        var article = location.pathname;
+        article = article.substring(0, article.length - 1);
+        if (article.length > 0) {
+          $("#sidenav li a[href^='"+article+"']").parent().addClass("active");
+        } else {
+          $("#sidenav li a[href='/']").parent().addClass("active");
+        }
+
+        // Instantiate FastClick
+        FastClick.attach(document.body);
+
+        // Hack to improve buggy scroll container behavior on iOS Safari
+        // On doc.ready, set the scroll position to 1px
+        $("#sidenav").scrollTop(1);
+
+        // Make sure side nav never hit's the top or bottom by
+        // Making it offset from either by 1px
+        $("#sidenav").scroll(function () {
+          if ($(this).scrollTop() + $(this).innerHeight() == $(this)[0].scrollHeight) {
+            $(this).scrollTop($(this).scrollTop() - 1);
+
+          } else if ($(this).scrollTop() == 0) {
+            $(this).scrollTop(1);
+          }
+        });
+
+        $("[js-side-nav-toggle]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").click(function () {
+          handleSidebarToggle();
+        });
+
+        $("[js-page-overlay]").on("touchmove", function (e) {
+          e.preventDefault();
+        });
+      });
+
+      function handleSidebarToggle () {
+        $("body").toggleClass("sidebar-open");
+      }
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
+  </head>
+  <body>
+      
+<script id="search-results-template" type="text/mustache">
+    <ul class="search-results-ul">
+    {{#entries}}
+    <li class="search-li">
+      <u><a href="{{url}}">{{title}}</a></u>
+      <p>{{#excerpt}}{{{.}}}{{/excerpt}}</p>
+    </li>
+    {{/entries}}
+    </ul>
+</script>
+
+<script type="text/javascript">
+  $(function() {
+    $('#search-query').lunrSearch({
+      indexUrl  : '/js/index.json',           // url for the .json file containing search index data
+      results   : '#search-results',          // selector for containing search results element
+      template  : '#search-results-template', // selector for Mustache.js template
+      titleMsg  : null,   // message attached in front of results (can be empty)
+      emptyMsg  : '<p>No results.</p>',     // shown message if search returns no results
+      overlayDiv : '#active-search-overlay', // selector for div to grey out rest of page
+      searchForm : '#search-query', // selector for the input box
+      searchDiv : '#searchDiv'
+    });
+  });
+</script>
+    <div id="active-search-overlay" class="activeSearchOverlay" style="display: none;"></div>
+    <div class="header">
+      <div class="header--side-nav-toggle" js-side-nav-toggle>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+        <div class="header--side-nav-toggle-line"></div>
+      </div>
+      <a href="/" class="logo">
+        <img src="/css/img/mLab-logo-dark.svg" class="logo--image" />
+        <div class="logo--text">Docs + Support</div>
+      </a>
+      <div class="header--links">
+        <a href="https://mlab.com">mLab Home</a>
+        <a href="https://support.mlab.com">My Support Requests</a>
+        <a title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>" class="emailSupport">Email support@mlab.com</a>
+        <!--<a href="mailto:mLab Support<support@mlab.com>?body=Deployment Identifier (if applicable):%0D%0AmLab Account Name (if applicable):%0D%0A%0D%0A" class="emailSupport">Email support@mlab.com</a>-->
+      </div>
+    </div>
+    <div id="main" class="main">
+       <div class="search-form" id="searchDiv">
+         <span class="icon"><i class="fa fa-search"></i></span>
+           <form class="search-box" action="/search" method="get">
+             <input type="text" id="search-query" name="q" placeholder="Search" autocomplete="off">
+           </form>
+           <div id="search-results" class="searchResults" style="display: none;"></div>
+       </div>
+      <div id="sidenav" class="side-nav">
+        <ul>
+          <li><a href="/">Quick-Start Guide</a></li>
+          <li><a href="/accounts">mLab Account Setup</a></li>
+          <li><a href="/plans">Plans and Data Centers</a></li>
+          <li><a href="/private-environments">Private Environments</a></li>
+          <li><a href="/subscriptions">Database Subscriptions</a></li>
+          <li><a href="/connecting">Connecting</a></li>
+          <li><a href="/migrating">Migrating Data into mLab</a></li>
+          <li><a href="/languages">Language Center</a></li>
+          <li><a href="/monitoring">Monitoring and Alerts</a></li>
+          <li><a href="/indexing">Indexing and Performance</a></li>
+          <li><a href="/backups">Backup and Recovery</a></li>
+          <li><a href="/security">Security</a></li>
+          <li><a href="/ops">Managing Your MongoDB Deployment</a></li>
+          <li><a href="/support">Support</a></li>
+          <li><a href="/faq">Frequently Asked Questions (FAQ)</a></li>
+          
+          <li>
+            <a href="/unpublished/blankfile/">-------------------</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/markdown/">MARKDOWN SYNTAX</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/portal/">WRITING STYLE and TERMS</a>
+          </li>
+          
+          <li>
+            <a href="/unpublished/template/">TEMPLATE FOR NEW FILES</a>
+          </li>
+          
+        </ul>
+        <div class="side-nav--support-links">
+          <a class="side-nav--support-link" href="https://mlab.com">mLab Home</a>
+          <a class="side-nav--support-link" href="https://support.mlab.com">My Support Requests</a>
+          <a class="side-nav--support-link emailSupport" title="Open a new support request by emailing support@mlab.com" href="mailto:mLab Support<support@mlab.com>">Email support@mlab.com</a>
+        </div>
+      </div>
+      <div id="content" class="content-section">
+          <div id="contentdisplay" class="content-display">
+          
+<h1 class="no_toc" id="accessing-the-mongodb-oplog">Accessing the MongoDB oplog</h1>
+
+<ul id="markdown-toc">
+  <li><a href="#overview" id="markdown-toc-overview">Overview</a></li>
+  <li><a href="#accessing-the-oplog" id="markdown-toc-accessing-the-oplog">Accessing the oplog</a>    <ul>
+      <li><a href="#creating-a-database-user-to-access-the-oplog" id="markdown-toc-creating-a-database-user-to-access-the-oplog">Creating a database user to access the oplog</a></li>
+      <li><a href="#connecting-to-the-oplog" id="markdown-toc-connecting-to-the-oplog">Connecting to the oplog</a></li>
+    </ul>
+  </li>
+  <li><a href="#frequently-asked-questions" id="markdown-toc-frequently-asked-questions">Frequently Asked Questions</a>    <ul>
+      <li><a href="#q-does-the-local-database-holding-the-oplog-count-towards-my-quota-andor-bill" id="markdown-toc-q-does-the-local-database-holding-the-oplog-count-towards-my-quota-andor-bill">Q. Does the “local” database holding the oplog count towards my quota and/or bill?</a></li>
+      <li><a href="#q-how-do-i-create-a-database-user-that-can-read-both-the-oplog-and-my-database" id="markdown-toc-q-how-do-i-create-a-database-user-that-can-read-both-the-oplog-and-my-database">Q. How do I create a database user that can read both the oplog and my database?</a></li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="overview">Overview</h2>
+
+<p>All for-pay plans with mLab have access to the “local” database which contains the <a href="https://docs.mongodb.com/v3.4/core/replica-set-oplog/">oplog</a> (operations log), a special capped collection that keeps a rolling record of all insert, update, and delete operations.</p>
+
+<p>The oplog provides valuable information that can be used in a variety of ways. For example, <a href="https://www.meteor.com">Meteor-built</a> websites rely on the oplog to get real-time updates on data changes. Search and analytic engines such as Elasticsearch (via the <a href="https://github.com/mongodb-labs/mongo-connector/wiki">mongo-connector</a>) can also use the oplog to sync your data and help you gain insight from all of your application’s data-related activities. These are just two of the many applications and libraries out there that are designed to take advantage of an oplog’s contents.</p>
+
+<p>Since the oplog is critical to replication and the health of a cluster, we recommend against querying the oplog on the primary node of a cluster.  Oplog queries are resource intensive because they are not able to utilize indexes and require full collection scans for each operation.  Regularly querying the oplog can severely impact performance and even cause downtime.</p>
+
+<div class="note-box note-box">
+  <p>On Shared plans, we recommend tailing the oplog using <a href="https://docs.mongodb.com/v3.4/core/tailable-cursors/">tailable cursors</a> in order to sync data from the oplog.</p>
+
+  <p>On Dedicated plans running MongoDB 3.6 and the WiredTiger storage engine, we recommend instead using the <a href="https://docs.mongodb.com/manual/changeStreams/">Change Streams</a> feature.  This means that if your Dedicated plan deployment is running a version below MongoDB 3.6, we recommend upgrading to version 3.6 to use Change Streams.</p>
+</div>
+
+<h2 id="accessing-the-oplog">Accessing the oplog</h2>
+<p><em>Not available for Sandbox databases</em></p>
+
+<h3 id="creating-a-database-user-to-access-the-oplog">Creating a database user to access the oplog</h3>
+
+<p>For any application to read or tail the oplog, you will need to create a database user as per the following instructions:</p>
+
+<ol>
+  <li><a href="https://mlab.com/login">Log in</a> to the mLab management portal.</li>
+  <li>From your account’s Home page, navigate to the deployment whose oplog you want to access.</li>
+  <li>Click the “admin” database under the “System Databases” section.
+<img src="/assets/screenshot-admindb.png" alt="img-admindb" class="narrow" /></li>
+  <li>Click the “Users” tab.</li>
+  <li>Click the “Add oplog user” button to create a new user.<br />
+<img src="/assets/screenshot-addoploguser.png" alt="img-addoploguser" class="skinny" /></li>
+</ol>
+
+<h3 id="connecting-to-the-oplog">Connecting to the oplog</h3>
+
+<p>To connect to the oplog, you’ll need to make sure that your connection string is pointing to the “local” database where the oplog resides but authing against the “admin” database because the oplog reader database user was created in that database.</p>
+
+<p>For example, your connection string may look like this:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mongodb://&lt;dbuser&gt;:&lt;dbpassword&gt;@ds012345-a0.mlab.com:56789,ds012345-a1.mlab.com:56790/local?replicaSet=rs-ds012345&amp;authSource=admin
+</code></pre></div></div>
+
+<h2 id="frequently-asked-questions">Frequently Asked Questions</h2>
+
+<h5 id="q-does-the-local-database-holding-the-oplog-count-towards-my-quota-andor-bill">Q. Does the “local” database holding the oplog count towards my quota and/or bill?</h5>
+
+<p>Shared plan deployments are currently configured with a 2 GB oplog, and this oplog is included for free. In other words, the local database does not contribute to the quota or bill for Shared plan deployments.</p>
+
+<p>Dedicated plans are initially configured using <a href="https://docs.mongodb.com/v3.4/core/replica-set-oplog/#oplog-size">MongoDB’s default oplog size</a> but the size can then be customized. The oplog on Dedicated plan deployments does count toward the pre-configured amount of storage that comes with each plan. For example, if your Dedicated plan includes 60 GB of storage and the oplog has been configured to be 10 GB, there will only be 50 GB left for use.</p>
+
+<h5 id="q-how-do-i-create-a-database-user-that-can-read-both-the-oplog-and-my-database">Q. How do I create a database user that can read both the oplog and my database?</h5>
+
+<p>Some client libraries such as <code class="highlighter-rouge">mongo-connector</code> need access not only to the oplog, but also to the database itself. To support client libraries like this, mLab oplog database users are automatically granted the following access privileges:</p>
+
+<p><strong>Dedicated plan deployments</strong></p>
+
+<p>The oplog reader user is automatically granted this role:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.grantRolesToUser(OPLOG_READER_USER, ["readAnyDatabase"])
+</code></pre></div></div>
+
+<p><strong>Shared plan deployments</strong></p>
+
+<p>The oplog reader user is automatically granted this role:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>db.grantRolesToUser(OPLOG_READER_USER, [{"role": "read", "db": YOUR_DB}] )
+</code></pre></div></div>
+
+<p></p>
+
+<div class="warning-box warning-box">
+  <p>If created an oplog database user prior to April 2018, it might not have access to the database itself. In this situation, you will need to create a brand-new oplog database user in order to get this access.</p>
+</div>
+
+
+          </div>
+      </div>
+      <div class="page-overlay" js-page-overlay>
+        <div class="page-overlay--close"></div>
+      </div>
+    </div>
+    <div class="clearer"></div>
+    <div id="footer">
+      <div>
+        &#169; Copyright 2018 by ObjectLabs Corporation. All Rights Reserved.
+      </div>
+        <script>
+          (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+          (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+          m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+          })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+          ga('create', 'UA-307557-10', 'auto');
+          ga('require', 'displayfeatures');
+          ga('require', 'linkid', 'linkid.js');
+          ga('send', 'pageview');
+        </script>
+    </div>
+    <script src="/javascripts/scale.fix.js"></script>
+    <script>
+      anchors.options = {
+        placement: 'left'
+      };
+      anchors.add('h2, h3, h4, h5');
+    </script>
+    <script src="/js/search.min.js" type="text/javascript" charset="utf-8"></script>
+  </body>
+</html>
