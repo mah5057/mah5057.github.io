@@ -1,0 +1,25 @@
+#!/bin/zsh
+
+sed -i'' -e "s/^layout: default$/layout: default-nosearch/gw changelog.txt" *.md
+
+if [ -s changelog.txt ]; then
+    echo "Changed 'default' layouts to 'default-nosearch' layouts"
+else
+    sed -i'' -e "s/^layout: default-nosearch$/layout: default/gw changelog.txt" *.md
+    echo "Changed 'default-nosearch' layouts to 'default' layouts"
+fi
+
+rm *.md-e
+rm changelog.txt
+
+sed -i'' -e "s/^layout: default-norobots$/layout: default-nosearch-norobots/gw changelog.txt" *.md
+
+if [ -s changelog.txt ]; then
+    echo "Changed 'default-norobots' layouts to 'default-nosearch-norobots'"
+else
+    sed -i'' -e "s/^layout: default-nosearch-norobots$/layout: default-norobots/gw changelog.txt" *.md
+    echo "Changed 'default-nosearch-norobots' layouts to 'default-norobots' layouts"
+fi
+
+rm *.md-e
+rm changelog.txt

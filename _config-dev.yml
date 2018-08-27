@@ -1,0 +1,8 @@
+
+name: mLab Doc Portal
+markdown: kramdown
+relative_permalinks: false
+permalink:  none
+url: https://localhost:4000
+host: 0.0.0.0
+highlighter: rouge
