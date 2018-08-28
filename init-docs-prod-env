@@ -1,0 +1,17 @@
+#!/bin/zsh
+
+assertCommandExists() {
+  which $1 > /dev/null 2>&1
+  CMD_NOT_FOUND=$?
+  if [[ $CMD_NOT_FOUND -ne 0 ]]; then
+    echo FAILURE: Could not find $1 command on the PATH
+    exit $CMD_NOT_FOUND
+  fi
+}
+
+assertCommandExists git
+
+git submodule update --init
+cd _site
+git checkout master
+
