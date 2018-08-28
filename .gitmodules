@@ -2,3 +2,6 @@
 	path = mah5057.github.io
 	url = git@github.com:mah5057/mah5057.github.io.git
 	branch = master
+[submodule "_site"]
+	path = _site
+	url = git@github.com:mah5057/mah5057.github.io.git
