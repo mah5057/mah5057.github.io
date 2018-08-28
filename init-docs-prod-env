@@ -12,6 +12,6 @@ assertCommandExists() {
 assertCommandExists git
 
 git submodule update --init
+git remote add dev git@github.com:mah5057/dev-mah5057.github.io.git
 cd _site
 git checkout master
-git remote add dev git@github.com:mah5057/dev-mah5057.github.io.git
