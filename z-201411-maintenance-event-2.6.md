@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title:  Version upgrades of mLab Sandbox and Shared plan databases
 permalink: /20141119-maintenance-event/
 description: mLab announcement regarding MongoDB version upgrades on November 19, 2014

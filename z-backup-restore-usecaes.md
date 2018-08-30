@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Supported backup restore use cases
 permalink: /backup-restore-usecases/
 description: Supported use cases for restoring mLab-created backups from/to various plan subscriptions 

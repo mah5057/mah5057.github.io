@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Security
 permalink: /security/
 description: mLab security includes custom firewalls, two-factor authentication and other features to protect your deployment and databases.

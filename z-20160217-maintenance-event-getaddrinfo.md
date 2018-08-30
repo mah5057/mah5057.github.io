@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title:  Scheduled maintenance for glibc getaddrinfo() vulnerability
 permalink: /2016-02-maintenance-event/
 description: mLab security announcement

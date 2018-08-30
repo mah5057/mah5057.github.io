@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Shutdown of mLab's integration with the Azure Marketplace
 permalink: /20160622-maintenance-event/
 description: Critical mLab notification about shutdown of integration with Azure Marketplace on June 22, 2016

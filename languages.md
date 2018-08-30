@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Language Center
 permalink: /languages/
 description: mLab provides MongoDB driver examples in many of the major languages like C#, Java, Node.js, PHP, Python, and Ruby

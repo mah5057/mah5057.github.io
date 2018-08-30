@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: Setting timeout values
 permalink: /timeouts/
 description: MongoDB driver connection timeout and socket timeout values determine how long your application waits to establish connections or wait for responses
