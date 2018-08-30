@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="/css/syntax.css">
 
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/nosearch.css">
     <link rel="stylesheet" href="/css/pygment_trac.css">
 
     <!-- Fonts -->
@@ -22,11 +22,9 @@
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans+Mono" />
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Droid+Sans" />
     <link type="text/css" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,700" />
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 
     <!-- Javascript -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-	
     <!-- Eliminate 300ms delay between a tap and the firing of the click event
     on mobile browsers. -->
     <script src="/javascripts/fastclick.js"></script>
@@ -90,33 +88,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/anchor-js/3.1.0/anchor.js"></script>
   </head>
   <body>
-      
-<script id="search-results-template" type="text/mustache">
-    <ul class="search-results-ul">
-    {{#entries}}
-    <li class="search-li">
-      <u><a href="{{url}}">{{title}}</a></u>
-      <p>{{#excerpt}}{{{.}}}{{/excerpt}}</p>
-    </li>
-    {{/entries}}
-    </ul>
-</script>
-
-<script type="text/javascript">
-  $(function() {
-    $('#search-query').lunrSearch({
-      indexUrl  : '/js/index.json',           // url for the .json file containing search index data
-      results   : '#search-results',          // selector for containing search results element
-      template  : '#search-results-template', // selector for Mustache.js template
-      titleMsg  : null,   // message attached in front of results (can be empty)
-      emptyMsg  : '<p>No results.</p>',     // shown message if search returns no results
-      overlayDiv : '#active-search-overlay', // selector for div to grey out rest of page
-      searchForm : '#search-query', // selector for the input box
-      searchDiv : '#searchDiv'
-    });
-  });
-</script>
-    <div id="active-search-overlay" class="activeSearchOverlay" style="display: none;"></div>
     <div class="header">
       <div class="header--side-nav-toggle" js-side-nav-toggle>
         <div class="header--side-nav-toggle-line"></div>
@@ -135,13 +106,6 @@
       </div>
     </div>
     <div id="main" class="main">
-       <div class="search-form" id="searchDiv">
-         <span class="icon"><i class="fa fa-search"></i></span>
-           <form class="search-box" action="/search" method="get">
-             <input type="text" id="search-query" name="q" placeholder="Search" autocomplete="off">
-           </form>
-           <div id="search-results" class="searchResults" style="display: none;"></div>
-       </div>
       <div id="sidenav" class="side-nav">
         <ul>
           <li><a href="/">Quick-Start Guide</a></li>
@@ -184,8 +148,6 @@
         </div>
       </div>
       <div id="content" class="content-section">
-          <div id="contentdisplay" class="content-display">
-          
 <h1 class="no_toc" id="indexing-and-performance">Indexing and Performance</h1>
 
 <ul id="markdown-toc">
@@ -924,9 +886,7 @@ included in the default <a href="https://docs.mongodb.com/manual/reference/metho
     </li>
   </ol>
 </div>
-
-          </div>
-      </div>
+</div>
       <div class="page-overlay" js-page-overlay>
         <div class="page-overlay--close"></div>
       </div>
@@ -955,6 +915,5 @@ included in the default <a href="https://docs.mongodb.com/manual/reference/metho
       };
       anchors.add('h2, h3, h4, h5');
     </script>
-    <script src="/js/search.min.js" type="text/javascript" charset="utf-8"></script>
   </body>
 </html>
