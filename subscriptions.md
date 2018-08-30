@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Database Subscriptions
 permalink: /subscriptions/
 description: How to create, change and upgrade mLab deployments/subscriptions.

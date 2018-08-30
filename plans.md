@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Plans and Cloud Regions
 permalink: /plans/
 description: mLab database plans offer single-node and replica set cluster plans with cloud providers in many regions worldwide with size and performance options

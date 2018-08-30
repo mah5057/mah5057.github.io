@@ -1,5 +1,5 @@
 ---
-layout: default-norobots
+layout: default-nosearch-norobots
 title: Database Subscriptions (OLD)
 permalink: /subscriptions-old/
 description: How to create, change and upgrade mLab database plans and subscriptions

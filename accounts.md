@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: mLab Account Setup
 permalink: /accounts/
 description: Create your free mLab account and manage your account users, email contacts, and billing preferences

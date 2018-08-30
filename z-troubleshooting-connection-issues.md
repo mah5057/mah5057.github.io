@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Troubleshooting connection issues
 permalink: /troubleshoot-connection-issues/
 description: Troubleshooting guide when you can't connect to your database or experience timeouts.

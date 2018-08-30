@@ -1,5 +1,5 @@
 ---
-layout: default-norobots
+layout: default-nosearch-norobots
 title:  Upgrade Requirements for Unsupported MongoDB Versions
 permalink: /db-version-requirements-unsupported/
 description: MongoDB upgrade requirements for your mLab database (previous versions no longer supported)

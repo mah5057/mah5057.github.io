@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: mLab Maintenance Events
 permalink: /maintenance-events/
 description: What to expect during required maintenance events

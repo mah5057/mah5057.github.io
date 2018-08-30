@@ -1,5 +1,5 @@
 ---
-layout: default-norobots
+layout: default-nosearch-norobots
 title: How to access MMS Monitoring
 permalink: /mms-access/
 description: How to access MMS Monitoring for your mLab deployment
