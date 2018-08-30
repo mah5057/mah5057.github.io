@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Monitoring and Alerts
 permalink: /monitoring/
 description: Monitor health and status of mLab databases with alerts, logs, New Relic integration and MongoDB stats

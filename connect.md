@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Connecting to Your Database
 permalink: /connecting/
 description: Connect to your mLab database using the mongo shell, a standard driver, or mLab's Data API. Troubleshoot issues when you can't connect to your database.

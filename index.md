@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Quick-Start Guide to mLab
 description: Support documentation on how to get started and use your mLab hosted MongoDB database
 minc-docversion: v3.4

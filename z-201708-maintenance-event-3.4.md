@@ -1,5 +1,5 @@
 ---
-layout: default-norobots
+layout: default-nosearch-norobots
 title:  Version upgrade of mLab Sandbox databases
 permalink: /201708-maintenance-event/
 description: mLab announcement regarding free Sandbox MongoDB version upgrades starting August 18, 2017

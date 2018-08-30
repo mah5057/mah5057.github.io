@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: SSL for MongoDB Connections
 permalink: /ssl-db-connections/
 description: Securing communications to your MongoDB database with SSL

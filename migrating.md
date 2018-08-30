@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Migrating Data Into mLab
 permalink: /migrating/
 description: Copy an mLab database using mongodump and mongorestore, or other replication methods to migrate or transfer data

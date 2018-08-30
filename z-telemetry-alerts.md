@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: Telemetry Alerts
 permalink: /telemetry-alerts/
 description: Configure custom alerts in Telemetry for mLab-hosted MongoDB dpeloyments

@@ -1,5 +1,5 @@
 ---
-layout: default
+layout: default-nosearch
 title: EU Data Protection
 permalink: /eu-data-protection/
 description: mLab and EU Data Protection (GDPR, Privacy Shield, etc.)
