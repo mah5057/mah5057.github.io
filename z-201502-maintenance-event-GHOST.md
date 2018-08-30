@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title:  Scheduled maintenance for GHOST vulnerability
 permalink: /201502-maintenance-event/
 description: mLab security announcement

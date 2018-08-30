@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title:  Upgrade Requirements for MongoDB Versions
 permalink: /db-version-requirements/
 description: MongoDB upgrade requirements for your mLab database

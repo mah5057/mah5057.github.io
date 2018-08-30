@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: mLab Private Environments (VPC)
 permalink: /private-environments/
 description: Securing your MongoDB deployment with mLab Private Environments (AWS VPC Peering)

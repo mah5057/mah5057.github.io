@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title:  Managing Your MongoDB Deployment
 permalink: /ops/
 description: How to kill operations, repair or restart your mLab database. How to change the MongoDB version for your mLab database.

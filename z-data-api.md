@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch
+layout: default
 title: mLab Data API
 permalink: /data-api/
 description: Documentation for mLab RESTful Data API

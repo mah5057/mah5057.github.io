@@ -1,5 +1,5 @@
 ---
-layout: default-nosearch-norobots
+layout: default-norobots
 title:  Version upgrades of mLab Sandbox and Shared plan databases
 permalink: /20150930-maintenance-event/
 description: mLab announcement regarding MongoDB version upgrades on September 30, 2015
