@@ -46,7 +46,7 @@ minc-docversion: v3.4
 ## Overview 
 {:.no_toc}
 
-Creating a new database deployment in your mLab account is a simple process after you've [determined which plan you need][docs-plans]. Once you've subscribed to a plan, you can make changes to the deployment or delete it when you do not need it any longer.
+Making a change. Creating a new database deployment in your mLab account is a simple process after you've [determined which plan you need][docs-plans]. Once you've subscribed to a plan, you can make changes to the deployment or delete it when you do not need it any longer.
 
 ## Creating a new deployment/subscription {#create-deployment}
 
