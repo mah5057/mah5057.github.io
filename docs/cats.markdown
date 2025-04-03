@@ -3,14 +3,14 @@ layout: page
 permalink: /cats/
 ---
 
-![hakone](/assets/img/steadman2.jpg)
+![steadman2](/assets/img/steadman2.JPG)
 
-![hakone](/assets/img/thistle2.jpg)
+![thistle2](/assets/img/thistle2.jpg)
 
-![hakone](/assets/img/thistle1.jpg)
+![thistle1](/assets/img/thistle1.jpg)
 
-![hakone](/assets/img/thistle3.jpg)
+![thistle3](/assets/img/thistle3.jpg)
 
-![hakone](/assets/img/steadman4.jpg)
+![steadman4](/assets/img/steadman4.JPG)
 
-![hakone](/assets/img/thistle4.jpg)
+![thistle4](/assets/img/thistle4.jpg)
