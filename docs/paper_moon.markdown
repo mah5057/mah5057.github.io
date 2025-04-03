@@ -41,7 +41,7 @@ After drawing the circles on the posterboards, I cut out the constituent pieces 
 
 After designing and cutting the pieces of the moon from the foam core board, I had to assemble them into the final shape. As mentioned above, I used duct tape with paint stir sticks as support on the backside of the moon (unfortunately I didn't think to take any photos of this).
 
-After assembling the pieces into the ultimate shape, I spray-painted it with two types of paint, a primer:
+After assembling the pieces of the crescent shape, I spray-painted it with two types of paint, a primer:
 
 ![primer](/assets/img/spray_painted1.jpg)
 
@@ -49,7 +49,9 @@ followed by a stone spray, to add some moon-like texture:
 
 ![stone spray](/assets/img/spray_painted.jpg)
 
-I used my piano bench as the seat, and I found that attaching the moon to the bench provided a great base to keep it upright:
+After finishing the crescent shape, I assembled the base shape, spray-painted it black, and attached it to the crescent shape.
+
+I used a piano bench as the seat, and I found that attaching the moon to the bench provided a great base to keep it upright:
 
 ![steadman's test](/assets/img/steadman_test_cute.jpg)
 *steadman testing it all out*
