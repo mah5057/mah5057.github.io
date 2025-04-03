@@ -24,16 +24,16 @@ permalink: /cats/
 
 <div class="row">
   <div class="column">
-    <img width="900" height="600" src="/assets/img/steadman2.jpg">
+    <img width="900" height="600" src="/assets/img/steadman2.JPG">
     <img width="900" height="600" src="/assets/img/thistle1.jpg">
-    <img width="900" height="600" src="/assets/img/steadman3.jpg">
+    <img width="900" height="600" src="/assets/img/steadman3.JPG">
     <img width="900" height="600" src="/assets/img/thistle4.jpg">
   </div>
   <div class="column">
     <img width="900" height="600" src="/assets/img/thistle2.jpg">
-    <img width="900" height="600" src="/assets/img/steadman1.jpg">
+    <img width="900" height="600" src="/assets/img/steadman1.JPG">
     <img width="900" height="600" src="/assets/img/thistle3.jpg">
-    <img width="900" height="600" src="/assets/img/steadman4.jpg">
+    <img width="900" height="600" src="/assets/img/steadman4.JPG">
   </div>
 </div>
 <!-- <p align="left">
