@@ -15,7 +15,15 @@ I saw this as yet another opportunity to take photos of people (my favorite type
 
 The first thing I had to do was figure out what materials I would use. 
 
-I ended up landing on foam core boards, but since it's very hard to find an `80" x 120"` single piece of board, I had to go with 4 `30" x 40"` and 2 `60" x 40"` boards (the craft store that delivered late only had these quantities and sizes available), cut out the constituent pieces of the moon and assemble it using duct tape and paint stir sticks for additional support.
+I ended up landing on foam core boards, but since it's very hard to find an `80" x 120"` single piece of board, I had to go with 4 `30" x 40"` and 2 `60" x 40"` boards (the craft store that delivered late only had these quantities and sizes available). I then taped these to a wall in a big rectangular shape measuring `80" x 120"`.
+
+To draw a moon with a perfectly circular shape, I realized that I could use two differently sized circles, with the smaller circle cutting out the negative space of the crescent moon shape. 
+
+At first I tried using intersecting circles, but I noticed that the resulting crescent moon didn't have as much overhang of the photo subject as I would have liked.
+
+I then decided to have the smaller circle be a proper subset of the larger circle, and have them overlapping along part of their circumference (almost like tangent circles but not really).
+
+To draw the circles, I simply attached a pen to the center of each circle with a string whose length was equal to the radius of each circle and used that as a guide.
 
 Please excuse my sloppy drafting and handwriting:
 
@@ -25,7 +33,7 @@ I'm given to doodling when thinking:
 
 ![sketchbook2](/assets/img/sketchbook_moon2.jpg)
 
-Moon drawn and cut:
+After drawing the circles on the posterboards, I cut out the constituent pieces of the moon, to be assembled with duct tape and painting stir sticks next:
 
 ![laid out](/assets/img/laid_out.jpg)
 
