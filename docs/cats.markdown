@@ -3,7 +3,7 @@ layout: page
 permalink: /cats/
 ---
 
-![steadman2](/assets/img/steadman2.JPG)
+![steadman2](/assets/img/steadman2.jpg)
 
 ![thistle2](/assets/img/thistle2.jpg)
 
@@ -11,6 +11,6 @@ permalink: /cats/
 
 ![thistle1](/assets/img/thistle1.jpg)
 
-![steadman4](/assets/img/steadman5.JPG)
+![steadman4](/assets/img/steadman5.jpg)
 
 ![thistle3](/assets/img/thistle3.jpg)
