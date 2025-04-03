@@ -2,7 +2,7 @@
 layout: post
 title:  "Initial Commit"
 date:   2025-04-02 18:02:13 -0700
-categories: jekyll update
+categories: photography
 ---
 Hello, world! Here are some photographs that I took in Japan:
 
