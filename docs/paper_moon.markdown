@@ -5,11 +5,11 @@ permalink: /papermoon/
 
 **PAPER MOON PHOTO BACKDROP**
 
-Halloween is one of my favorite times of year. It's usually the unofficial end to any autumnal heatwaves in San Francisco, as well as the final fun holiday before the dreaded Christmas. 
+Halloween is one of my favorite times of the year. It is usually the unofficial end to any autumnal heatwaves in San Francisco, and it also holds the distinction of being the final fun holiday before the dreaded Christmas. 
 
 For 2023, we thought it would be fun to host a costume party, complete with a photobooth utilizing a century-old backdrop, [the paper moon](https://mashable.com/feature/paper-moons).
 
-I saw this as yet another opportunity to take photos of people (my favorite type of photograph), as well as an opportunity to attempt to build something physical, which is a nice break from my usually virtual mode of creation.
+I saw this as yet another opportunity to take photos of people (my favorite type of photograph), as well as an opportunity to attempt to build something physical, which is a nice break from my usual virtual mode of creation.
 
 ### PLANNING & DESIGN
 
