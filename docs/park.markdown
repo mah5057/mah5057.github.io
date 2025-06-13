@@ -13,4 +13,4 @@ permalink: /park/
 
 ![chickens](/assets/img/chickens.jpg)
 
-![dog_in_car](/assets/img/dog_in_car.jpg)
+![freegaza](/assets/img/freegaza.jpg)
