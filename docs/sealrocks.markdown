@@ -3,7 +3,7 @@ layout: page
 permalink: /sealrocks/
 ---
 
-![cliffhouse](/assets/img/cliffhouse.jpeg)
+![cliffhouse](/assets/img/cliffhouse.jpg)
 
 ![camera_obscura](/assets/img/camera_obscura.jpeg)
 
