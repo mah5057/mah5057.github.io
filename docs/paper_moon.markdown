@@ -21,7 +21,7 @@ To draw a moon with a perfectly circular shape, I realized that I could use two 
 
 At first I tried using intersecting circles, but I noticed that the resulting crescent moon didn't have as much overhang of the photo subject as I would have liked.
 
-I then decided to have the smaller circle be fully contained in the larger circle, and have them overlapping along part of their circumference.
+I then decided to have the smaller circle be fully contained in the larger circle, and to have them overlapping along part of their circumference.
 
 To draw the circles, I attached a pen to the center of each circle with a string whose length was equal to the radius of each circle and used that as a guide.
 
@@ -53,11 +53,11 @@ After finishing the crescent shape, I assembled the base shape, spray-painted it
 
 I used a piano bench as the seat, and I found that attaching the moon to the bench provided a great base to keep it upright:
 
-![steadman's test](/assets/img/steadman_test_cute.jpg)
-*steadman testing it all out*
+![steadman](/assets/img/steadman_test_cute.jpg)
+cat
 
 ![studio set up](/assets/img/set_up_moon.jpg)
-*set up in the studio (my home office)*
+*set up in the studio (my office)*
 
 ### FINAL PRODUCT
 
