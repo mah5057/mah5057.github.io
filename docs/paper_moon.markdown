@@ -21,9 +21,9 @@ To draw a moon with a perfectly circular shape, I realized that I could use two 
 
 At first I tried using intersecting circles, but I noticed that the resulting crescent moon didn't have as much overhang of the photo subject as I would have liked.
 
-I then decided to have the smaller circle be a proper subset of the larger circle, and have them overlapping along part of their circumference (almost like tangent circles but not really).
+I then decided to have the smaller circle be fully contained in the larger circle, and have them overlapping along part of their circumference.
 
-To draw the circles, I simply attached a pen to the center of each circle with a string whose length was equal to the radius of each circle and used that as a guide.
+To draw the circles, I attached a pen to the center of each circle with a string whose length was equal to the radius of each circle and used that as a guide.
 
 Please excuse my sloppy drafting and handwriting:
 
